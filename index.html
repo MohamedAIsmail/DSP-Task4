@@ -4,13 +4,30 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="index.css">
+    <title>Fourier usage in compression demo</title>
 </head>
 <!-- <button id="btn">crop</button> -->
 <body>
+
+
     <canvas id="canvas" width="300" height="300" style="border:1px solid #000000;">
         
     </canvas>
+
+    <button onclick="update_element()">update</button>
+
+    <script>
+        const update_element = () => {
+            console.log("hello")
+            // create a new timestamp 
+            var imgURL = "nature1.jpg"
+            var timestamp = new Date().getTime(); 
+            var canvas = document.getElementById("canvas"); 
+            var queryString = "?t=" + timestamp;    
+            canvas.style.backgroundImage = "url(" + imgURL + queryString + ")" ;    
+        }
+    </script>
     <!-- <img id="img" width="400" height="300" src = "https://image3.mouthshut.com/images/ImagesR/imageuser_m/2017/11/925747536-4559193-1.png?rnd=38062">
         </img> -->
     <script src="./script.js"></script>
