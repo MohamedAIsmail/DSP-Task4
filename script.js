@@ -9,18 +9,19 @@ let canvas_height = canvas.height;
 let startX, startY
 let shapes = [];
 let current_shape_index 
+let is_dragging = false
 shapes.push({type:'rect', x:50, y:50 , width:100, height:100, color:'yellow'})
 // shapes.push({type:'elipse', x:50, y:50 , radiusX:35, radiusY:50, color:'green'})
-shapes.push({type:'elipse', x:50, y:50 , radiusX:35, radiusY:50, color:'green'})
+shapes.push({type:'ellipse', x:50, y:50 , width:35, height:50, color:'green'})
 
 let draw = (shape)=>{
     context.fillStyle = shape.color;
     if(shape.type == 'rect'){
         context.fillRect(shape.x, shape.y, shape.width, shape.height)
     }
-    else if(shape.type == 'elipse'){
+    else if(shape.type == 'ellipse'){
         context.beginPath();
-        context.ellipse(shape.x, shape.y, shape.radiusX, shape.radiusY, 0, 0, 2 * Math.PI);
+        context.ellipse(shape.x, shape.y, shape.width, shape.height, 0, 0, 2 * Math.PI);
         context.fill();}
 }
 
@@ -35,10 +36,21 @@ let draw_shapes = ()=>{
 draw_shapes()
 
 let is_mouse_in_shape = (startX, startY, shape)=> {
-    let shape_left = shape.x
-    let shape_right = shape.x + shape.width
-    let shape_top = shape.y
-    let shape_bottom = shape.y + shape.height
+    let shape_left, shape_right, shape_top, shape_bottom
+    if(shape.type == 'ellipse'){
+    shape_left = shape.x - shape.width
+    shape_right = shape.x + shape.width
+    shape_top = shape.y - shape.height
+    shape_bottom = shape.y + shape.height
+        }
+    else{
+        shape_left = shape.x 
+        shape_right = shape.x + shape.width
+        shape_top = shape.y 
+        shape_bottom = shape.y + shape.height
+    }
+    
+
     if(startX > shape_left && startX < shape_right &&
         startY > shape_top && startY < shape_bottom){
             return true;
@@ -56,22 +68,58 @@ let mouse_down = (event)=>{
         
         if(is_mouse_in_shape(startX, startY, shape)){
             current_shape_index = index;
-            console.log(current_shape_index)
+            is_dragging = true
         }
-        // console.log('yes')
 
         index++;    
     }
 
 }
 
+
+let mouse_up = (event)=> {
+    if(!is_dragging){
+        return
+    }
+    event.preventDefault();
+    is_dragging = false;
+}
+
+
+let mouse_out = (event)=> {
+    if(!is_dragging){
+        return
+    }
+    event.preventDefault();
+    is_dragging = false;
+}
+
+let mouse_move = (event)=> {
+    if(!is_dragging){
+        return
+    }
+    event.preventDefault();
+    let mouseX = parseInt(event.clientX);
+    let mouseY = parseInt(event.clientY);
+
+    let dx = mouseX - startX;
+    let dy = mouseY - startY;
+
+    let current_shape = shapes[current_shape_index]
+    current_shape.x += dx;
+    current_shape.y += dy;
+
+    draw_shapes()
+
+    startX = mouseX
+    startY = mouseY
+}
+
+
 canvas.onmousedown = mouse_down;
-
-
-
-
-
-
+canvas.onmouseup = mouse_up;
+canvas.onmouseout = mouse_out;
+canvas.onmousemove = mouse_move;
 
 
 
