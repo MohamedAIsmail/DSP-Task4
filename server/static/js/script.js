@@ -11,6 +11,8 @@ let shapes = [];
 let current_bullet_points 
 let current_shape_index 
 let is_dragging = false
+let scaling_point_drag = false
+let current_dragged_point
 let offset_x, offset_y
 shapes.push({type:'ellipse', x:50, y:50 , Rx:35, Ry:50, color:'green'})
 
@@ -32,16 +34,16 @@ const select_shape = (shape) => {
     context.globalAlpha = 0.8
 
         if(shape.type == 'rect'){
-            bullet_points = [{side:'left', x:shape.x - 2, y:shape.y + 0.5* shape.height},
-                            {side:'right', x:shape.x + shape.width + 2, y:shape.y + 0.5*shape.height},
-                            {side:'top', x:shape.x + 0.5*shape.width, y:shape.y - 2},
-                            {side:'bottom', x:shape.x + 0.5*shape.width, y:shape.y + shape.height + 2}]
+            bullet_points = [{type:'ellipse', side:'left', x:shape.x - 2, y:shape.y + 0.5* shape.height, Rx:5, Ry:5},
+                            {type:'ellipse', side:'right', x:shape.x + shape.width + 2, y:shape.y + 0.5*shape.height, Rx:5, Ry:5},
+                            {type:'ellipse', side:'top', x:shape.x + 0.5*shape.width, y:shape.y - 2, Rx:5, Ry:5},
+                            {type:'ellipse', side:'bottom', x:shape.x + 0.5*shape.width, y:shape.y + shape.height + 2, Rx:5, Ry:5}]
         }
         else{
-            bullet_points = [{side:'left', x:shape.x - shape.Rx - 2, y:shape.y},
-                            {side:'right', x:shape.x + 2 + shape.Rx, y:shape.y},
-                            {side:'top', x:shape.x, y:shape.y - shape.Ry - 2},
-                            {side:'bottom', x:shape.x, y:shape.y + shape.Ry + 2}]
+            bullet_points = [{type:'ellipse', side:'left', x:shape.x - shape.Rx - 2, y:shape.y, Rx:5, Ry:5},
+                            {type:'ellipse', side:'right', x:shape.x + 2 + shape.Rx, y:shape.y, Rx:5, Ry:5},
+                            {type:'ellipse', side:'top', x:shape.x, y:shape.y - shape.Ry - 2, Rx:5, Ry:5},
+                            {type:'ellipse', side:'bottom', x:shape.x, y:shape.y + shape.Ry + 2, Rx:5, Ry:5}]
         }
         for(let bullet_point of bullet_points){
         context.beginPath();
@@ -67,7 +69,8 @@ let draw = (shape)=>{
     else if(shape.type == 'ellipse'){
         context.beginPath();
         context.ellipse(shape.x, shape.y, shape.Rx, shape.Ry, 0, 0, 2 * Math.PI);
-        context.fill();}
+        context.fill();
+    }
 }
 
 let draw_shapes = ()=>{
@@ -107,7 +110,6 @@ let mouse_down = (event)=>{
     event.preventDefault();
     startX = parseInt(event.clientX - offset_x);
     startY = parseInt(event.clientY - offset_y);
-
     let index = 0
     for(let shape of shapes){
         
@@ -116,27 +118,39 @@ let mouse_down = (event)=>{
             is_dragging = true
             draw_shapes()
             select_shape(shapes[current_shape_index])
-            
         }
-        // else{
-        //     draw_shapes()
-        // }
-
         index++;    
+
+    }
+        for(let point of current_bullet_points){
+        
+            if(is_mouse_in_shape(startX, startY, point)){
+                current_dragged_point = point.side
+                scaling_point_drag = true
+            }
+            
     }
     
-
 }
 
 
 let mouse_up = (event)=> {
-    if(!is_dragging){
+    if(is_dragging){
+        event.preventDefault();
+        draw_shapes()
+        select_shape(shapes[current_shape_index])
+        is_dragging = false;
         return
     }
-    event.preventDefault();
-    draw_shapes()
-    select_shape(shapes[current_shape_index])
-    is_dragging = false;
+    else if(scaling_point_drag){
+        event.preventDefault();
+        draw_shapes()
+        select_shape(shapes[current_shape_index])
+        scaling_point_drag = false
+    }
+    else{
+        return
+    }
 }
 
 
@@ -150,24 +164,77 @@ let mouse_out = (event)=> {
 }
 
 let mouse_move = (event)=> {
-    if(!is_dragging){
-        return
-    }
-    event.preventDefault();
     let mouseX = parseInt(event.clientX - offset_x);
     let mouseY = parseInt(event.clientY - offset_y);
+    if(is_dragging){
+        event.preventDefault();
+    
 
-    let dx = mouseX - startX;
-    let dy = mouseY - startY;
+        let dx = mouseX - startX;
+        let dy = mouseY - startY;
 
-    let current_shape = shapes[current_shape_index]
-    current_shape.x += dx;
-    current_shape.y += dy;
+        let current_shape = shapes[current_shape_index]
+        current_shape.x += dx;
+        current_shape.y += dy;
 
-    draw_shapes()
-    select_shape(shapes[current_shape_index])
-    startX = mouseX
-    startY = mouseY
+        draw_shapes()
+        select_shape(shapes[current_shape_index])
+        startX = mouseX
+        startY = mouseY
+    }
+    else if (scaling_point_drag){
+
+        event.preventDefault();
+        let current_shape = shapes[current_shape_index]
+        let dx = mouseX - startX;
+        let dy = mouseY - startY;
+        console.log(current_dragged_point)
+        if(current_dragged_point == 'left'){
+            if(current_shape.type == 'ellipse'){
+                current_shape.x +=  0.5*dx
+                current_shape.Rx -= 0.5*dx
+            }
+            else{
+                current_shape.x +=  dx
+                current_shape.width -= dx
+            }
+        }
+        if(current_dragged_point == 'right'){
+            if(current_shape.type == 'ellipse'){
+                current_shape.x +=  0.5*dx
+                current_shape.Rx += 0.5*dx
+            }
+            else{
+                current_shape.width += dx
+            }
+        }
+        if(current_dragged_point == 'top'){
+            if(current_shape.type == 'ellipse'){
+                current_shape.y +=  0.5*dy
+                current_shape.Ry -= 0.5*dy
+            }
+            else{
+                current_shape.y +=  dy
+                current_shape.height -= dy
+            }
+        }
+        if(current_dragged_point == 'bottom'){
+            if(current_shape.type == 'ellipse'){
+                current_shape.y +=  0.5*dy
+                current_shape.Ry += 0.5*dy
+            }
+            else{
+                current_shape.height += dy
+            }
+        }
+        startX = mouseX
+        startY = mouseY
+        draw_shapes()
+        select_shape(shapes[current_shape_index])
+    }
+    else{
+        return
+    }
 }
 
 
