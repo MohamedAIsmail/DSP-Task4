@@ -8,11 +8,56 @@ let canvas_height = canvas.height;
 
 let startX, startY
 let shapes = [];
+let current_bullet_points 
 let current_shape_index 
 let is_dragging = false
-shapes.push({type:'rect', x:50, y:50 , width:100, height:100, color:'yellow'})
+let offset_x, offset_y
+shapes.push({type:'ellipse', x:50, y:50 , Rx:35, Ry:50, color:'green'})
+
+shapes.push({type:'rect', x:50, y:50 , width:100, height:100, color:'green'})
+
+
 // shapes.push({type:'elipse', x:50, y:50 , radiusX:35, radiusY:50, color:'green'})
-shapes.push({type:'ellipse', x:50, y:50 , width:35, height:50, color:'green'})
+
+const select_shape = (shape) => {
+    if(shape.type == 'rect'){
+    context.strokeRect(shape.x, shape.y, shape.width, shape.height);
+    
+    }
+    else{
+        context.strokeRect(shape.x - shape.Rx, shape.y - shape.Ry, 2*shape.Rx, 2*shape.Ry);
+    }
+    let bullet_points
+    context.fillStyle = 'yellow';
+    context.globalAlpha = 0.8
+
+        if(shape.type == 'rect'){
+            bullet_points = [{side:'left', x:shape.x - 2, y:shape.y + 0.5* shape.height},
+                            {side:'right', x:shape.x + shape.width + 2, y:shape.y + 0.5*shape.height},
+                            {side:'top', x:shape.x + 0.5*shape.width, y:shape.y - 2},
+                            {side:'bottom', x:shape.x + 0.5*shape.width, y:shape.y + shape.height + 2}]
+        }
+        else{
+            bullet_points = [{side:'left', x:shape.x - shape.Rx - 2, y:shape.y},
+                            {side:'right', x:shape.x + 2 + shape.Rx, y:shape.y},
+                            {side:'top', x:shape.x, y:shape.y - shape.Ry - 2},
+                            {side:'bottom', x:shape.x, y:shape.y + shape.Ry + 2}]
+        }
+        for(let bullet_point of bullet_points){
+        context.beginPath();
+        context.ellipse(bullet_point.x, bullet_point.y, 5, 5, 0, 0, 2 * Math.PI)
+        context.fill();;
+        }
+        current_bullet_points = bullet_points;
+};
+
+let get_offset = ()=> {
+    let canvas_offset = canvas.getBoundingClientRect();
+    offset_x = canvas_offset.left
+    offset_y = canvas_offset.top
+}
+
+get_offset()
 
 let draw = (shape)=>{
     context.fillStyle = shape.color;
@@ -21,7 +66,7 @@ let draw = (shape)=>{
     }
     else if(shape.type == 'ellipse'){
         context.beginPath();
-        context.ellipse(shape.x, shape.y, shape.width, shape.height, 0, 0, 2 * Math.PI);
+        context.ellipse(shape.x, shape.y, shape.Rx, shape.Ry, 0, 0, 2 * Math.PI);
         context.fill();}
 }
 
@@ -38,10 +83,10 @@ draw_shapes()
 let is_mouse_in_shape = (startX, startY, shape)=> {
     let shape_left, shape_right, shape_top, shape_bottom
     if(shape.type == 'ellipse'){
-    shape_left = shape.x - shape.width
-    shape_right = shape.x + shape.width
-    shape_top = shape.y - shape.height
-    shape_bottom = shape.y + shape.height
+    shape_left = shape.x - shape.Rx
+    shape_right = shape.x + shape.Rx
+    shape_top = shape.y - shape.Ry
+    shape_bottom = shape.y + shape.Ry
         }
     else{
         shape_left = shape.x 
@@ -60,8 +105,8 @@ let is_mouse_in_shape = (startX, startY, shape)=> {
 
 let mouse_down = (event)=>{
     event.preventDefault();
-    startX = parseInt(event.clientX);
-    startY = parseInt(event.clientY);
+    startX = parseInt(event.clientX - offset_x);
+    startY = parseInt(event.clientY - offset_y);
 
     let index = 0
     for(let shape of shapes){
@@ -69,10 +114,17 @@ let mouse_down = (event)=>{
         if(is_mouse_in_shape(startX, startY, shape)){
             current_shape_index = index;
             is_dragging = true
+            draw_shapes()
+            select_shape(shapes[current_shape_index])
+            
         }
+        // else{
+        //     draw_shapes()
+        // }
 
         index++;    
     }
+    
 
 }
 
@@ -82,6 +134,8 @@ let mouse_up = (event)=> {
         return
     }
     event.preventDefault();
+    draw_shapes()
+    select_shape(shapes[current_shape_index])
     is_dragging = false;
 }
 
@@ -92,6 +146,7 @@ let mouse_out = (event)=> {
     }
     event.preventDefault();
     is_dragging = false;
+
 }
 
 let mouse_move = (event)=> {
@@ -99,8 +154,8 @@ let mouse_move = (event)=> {
         return
     }
     event.preventDefault();
-    let mouseX = parseInt(event.clientX);
-    let mouseY = parseInt(event.clientY);
+    let mouseX = parseInt(event.clientX - offset_x);
+    let mouseY = parseInt(event.clientY - offset_y);
 
     let dx = mouseX - startX;
     let dy = mouseY - startY;
@@ -110,7 +165,7 @@ let mouse_move = (event)=> {
     current_shape.y += dy;
 
     draw_shapes()
-
+    select_shape(shapes[current_shape_index])
     startX = mouseX
     startY = mouseY
 }
