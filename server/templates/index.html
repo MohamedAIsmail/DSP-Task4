@@ -5,31 +5,82 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../static/css/index.css">
-    <title>Fourier usage in compression demo</title>
+    <title>Fourier elkhateer</title>
 </head>
 <!-- <button id="btn">crop</button> -->
 <body>
 
-
-    <canvas id="canvas" width="300" height="300" style="border:1px solid #000000;">
-        
-    </canvas>
-
-    <button onclick="update_element()">update</button>
-
+    <div class="page-container">
+        <!-- Rest of the page -->
+        <div class="mid-section">
+          <!-- Left section -->
+          <div id="left-section" class="left-section">
+            <!-- upper left img -->
+           <div class="section-container">
+            <button id="img1_upload">upload</button> <br>
+            <img src="../static/assets/nature1.jpg" alt="">
+           </div>
+           <!-- lower left img -->
+           <div class="section-container">
+            <button onclick="update_element()">upload</button>
+            <br>
+            <img id="img2_upload" src="../static/assets/nature1.jpg" alt="">
+           </div>
+          </div>
+  
+          <!-- Middle section -->
+          <div class="middle-section">
+            <div class="section-container">
+              <p class ="title">Crop magnitude</p>
+             <img src="../static/assets/nature1.jpg" class="infographic" id="mid-figure1" alt="">
+           </div>
+            <div class="section-container">
+              <p class ="title">Crop phase</p>
+             <img src="../static/assets/nature1.jpg" class="infographic" id="mid-figure2" alt="">
+           </div>
+          </div>
+          <!-- Right section of the website -->
+          <div id="right-section" class="right-section">
+            <div class="section-container">
+                <p class ="title">Output</p>
+               <img src="../static/assets/nature1.jpg" class="infographic" id="mid-figure2" alt="">
+               <br>
+               <button>reconstruct</button>
+             </div>
+            <div class="section-container">
+                <p class="title">
+                Made by SBME 2024 team 
+                </p>
+                <p class="title" style="text-align: left;">
+                   <br>
+                  - Ahmed Mohamed Elsarta <br>
+                  - Maha Medhat <br>
+                  - Mohamed Ahmed Ismail<br>
+                  - Yousef Kadry
+                </p>
+              </div>
+          </div>
+          
+          
+        </div>
+      </div>
+<!-- 
+    <canvas id="canvas" width="300" height="300" style="border:1px solid #000000;">     
+    </canvas>    -->
+    
     <script>
         const update_element = () => {
             console.log("hello")
             // create a new timestamp 
-            var imgURL = "nature1.jpg"
+            var imgURL = "../static/assets/nature1.jpg"
             var timestamp = new Date().getTime(); 
             var canvas = document.getElementById("canvas"); 
             var queryString = "?t=" + timestamp;    
             canvas.style.backgroundImage = "url(" + imgURL + queryString + ")" ;    
         }
     </script>
-    <!-- <img id="img" width="400" height="300" src = "https://image3.mouthshut.com/images/ImagesR/imageuser_m/2017/11/925747536-4559193-1.png?rnd=38062">
-        </img> -->
+    
     <script src="../static/js/script.js"></script>
+
 </body>
 </html>
