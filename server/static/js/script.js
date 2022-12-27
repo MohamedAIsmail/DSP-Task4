@@ -1,6 +1,7 @@
 // var image = new Image();
 let canvas1 = document.getElementById('magCanvas');
 let canvas2 = document.getElementById('phaseCanvas');
+console.log(canvas2)
 // let btn = document.getElementById('btn')
 let context1 = canvas1.getContext('2d');
 let context2 = canvas2.getContext('2d');
@@ -17,7 +18,6 @@ let is_dragging = false
 let scaling_point_drag = false
 let current_dragged_point
 let offset1_x, offset1_y
-let offset2_x, offset2_y
 
 shapes.push({type:'ellipse', x:50, y:50 , Rx:35, Ry:50, color:'green'})
 
@@ -59,12 +59,18 @@ const select_shape = (shape, context) => {
 };
 
 let get_offset = (canvas)=> {
+    console.log(canvas.width)
+
     let canvas_offset = canvas.getBoundingClientRect();
+    console.log(canvas_offset.left)
+
     let offset_x = canvas_offset.left
     let offset_y = canvas_offset.top
     return [offset_x, offset_y]
 }
 [offset1_x, offset1_y] = get_offset(canvas1)
+let [offset2_x, offset2_y] = get_offset(canvas2)
+console.log(offset2_x)
 
 let draw = (shape, context)=>{
     context.fillStyle = shape.color;
@@ -87,6 +93,7 @@ let draw_shapes = (context, canvas, shapes)=>{
 }
 
 draw_shapes(context1, canvas1, shapes)
+draw_shapes(context2, canvas2, shapes)
 
 let is_mouse_in_shape = (startX, startY, shape)=> {
     let shape_left, shape_right, shape_top, shape_bottom
@@ -115,6 +122,8 @@ let mouse_down = (event, offset_x, offset_y, shapes, canvas, context)=>{
     event.preventDefault();
     startX = parseInt(event.clientX - offset_x);
     startY = parseInt(event.clientY - offset_y);
+    console.log(offset_x)
+
     let index = 0
     for(let shape of shapes){
         if(is_mouse_in_shape(startX, startY, shape)){
@@ -185,9 +194,9 @@ let mouse_move = (event, shapes, offset_x, offset_y, context, canvas)=> {
         select_shape(shapes[current_shape_index], context)
         startX = mouseX
         startY = mouseY
+        return
     }
     else if (scaling_point_drag){
-        console.log('gg')
         event.preventDefault();
         let current_shape = shapes[current_shape_index]
         let dx = mouseX - startX;
@@ -232,7 +241,7 @@ let mouse_move = (event, shapes, offset_x, offset_y, context, canvas)=> {
         }
         startX = mouseX
         startY = mouseY
-        draw_shapes()
+        draw_shapes(context, canvas, shapes)
         select_shape(shapes[current_shape_index], context)
     }
     else{
@@ -240,19 +249,29 @@ let mouse_move = (event, shapes, offset_x, offset_y, context, canvas)=> {
     }
 }
 
-
-// canvas1.onmousedown = mouse_down(offset1_x, offset1_y, shapes)
+// canvas1
 canvas1.addEventListener('mousedown', (e)=>{
     mouse_down(e, offset1_x, offset1_y, shapes, canvas1, context1)
 }) 
-// canvas1.onmouseup = mouse_up(shapes);
 canvas1.addEventListener('mouseup', (e)=>{
     mouse_up(e, shapes, context1, canvas1)
 })
 canvas1.onmouseout = mouse_out
-// canvas1.onmousemove = mouse_move(shapes, offset1_x, offset1_y, context1, canvas1)
 canvas1.addEventListener('mousemove', (e)=>{
     mouse_move(e, shapes, offset1_x, offset1_y, context1, canvas1)
+})
+
+// canvas2
+canvas2.addEventListener('mousedown', (e)=>{
+    console.log('zz')
+    mouse_down(e, offset2_x, offset2_y, shapes, canvas2, context2)
+}) 
+canvas2.addEventListener('mouseup', (e)=>{
+    mouse_up(e, shapes, context2, canvas2)
+})
+canvas2.onmouseout = mouse_out
+canvas2.addEventListener('mousemove', (e)=>{
+    mouse_move(e, shapes, offset2_x, offset2_y, context2, canvas2)
 })
 
 
