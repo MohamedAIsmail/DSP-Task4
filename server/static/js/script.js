@@ -1,27 +1,34 @@
 // var image = new Image();
 let canvas1 = document.getElementById('magCanvas');
 let canvas2 = document.getElementById('phaseCanvas');
-console.log(canvas2)
 // let btn = document.getElementById('btn')
 let context1 = canvas1.getContext('2d');
 let context2 = canvas2.getContext('2d');
-
+let rect1  = document.getElementById('rect1')
+let rect2  = document.getElementById('rect2')
+let ellipse1  = document.getElementById('ellipse1')
+let ellipse2  = document.getElementById('ellipse2')
+let del1  = document.getElementById('del1')
+let del2  = document.getElementById('del2')
 
 // let canvas_width = canvas.width;
 // let canvas_height = canvas.height;
 
 let startX, startY
-let shapes = [];
+let shapes1 = [];
+let shapes2 = [];
 let current_bullet_points = []
 let current_shape_index 
 let is_dragging = false
 let scaling_point_drag = false
 let current_dragged_point
 let offset1_x, offset1_y
+let img1_type = 'magnitude'
+let img2_type = 'phase'
 
-shapes.push({type:'ellipse', x:50, y:50 , Rx:35, Ry:50, color:'green'})
+// shapes.push({type:'ellipse', x:50, y:50 , Rx:35, Ry:50, color:'green'})
 
-shapes.push({type:'rect', x:50, y:50 , width:100, height:100, color:'green'})
+// shapes.push({type:'rect', x:50, y:50 , width:100, height:100, color:'green'})
 
 
 // shapes.push({type:'elipse', x:50, y:50 , radiusX:35, radiusY:50, color:'green'})
@@ -59,10 +66,8 @@ const select_shape = (shape, context) => {
 };
 
 let get_offset = (canvas)=> {
-    console.log(canvas.width)
 
     let canvas_offset = canvas.getBoundingClientRect();
-    console.log(canvas_offset.left)
 
     let offset_x = canvas_offset.left
     let offset_y = canvas_offset.top
@@ -91,9 +96,6 @@ let draw_shapes = (context, canvas, shapes)=>{
         draw(shape, context)
     }
 }
-
-draw_shapes(context1, canvas1, shapes)
-draw_shapes(context2, canvas2, shapes)
 
 let is_mouse_in_shape = (startX, startY, shape)=> {
     let shape_left, shape_right, shape_top, shape_bottom
@@ -147,12 +149,14 @@ let mouse_down = (event, offset_x, offset_y, shapes, canvas, context)=>{
 }
 
 
-let mouse_up = (event, shapes, context, canvas)=> {
+let mouse_up = (event, shapes, context, canvas, imgType)=> {
     if(is_dragging){
         event.preventDefault();
         draw_shapes(context, canvas, shapes)
         select_shape(shapes[current_shape_index], context)
         is_dragging = false;
+        send_shapes(shapes, imgType)
+
         return
     }
     else if(scaling_point_drag){
@@ -160,6 +164,7 @@ let mouse_up = (event, shapes, context, canvas)=> {
         draw_shapes(context, canvas, shapes)
         select_shape(shapes[current_shape_index], context)
         scaling_point_drag = false
+        send_shapes(shapes, imgType)
     }
     else{
         return
@@ -167,12 +172,15 @@ let mouse_up = (event, shapes, context, canvas)=> {
 }
 
 
-let mouse_out = (event)=> {
+let mouse_out = (event, shapes, imgType)=> {
     if(!is_dragging){
         return
     }
     event.preventDefault();
     is_dragging = false;
+    scaling_point_drag = false
+    send_shapes(shapes, imgType)
+
 
 }
 
@@ -181,7 +189,7 @@ let mouse_move = (event, shapes, offset_x, offset_y, context, canvas)=> {
     let mouseY = parseInt(event.clientY - offset_y);
     if(is_dragging){
         event.preventDefault();
-    
+        
 
         let dx = mouseX - startX;
         let dy = mouseY - startY;
@@ -251,38 +259,91 @@ let mouse_move = (event, shapes, offset_x, offset_y, context, canvas)=> {
 
 // canvas1
 canvas1.addEventListener('mousedown', (e)=>{
-    mouse_down(e, offset1_x, offset1_y, shapes, canvas1, context1)
+    mouse_down(e, offset1_x, offset1_y, shapes1, canvas1, context1)
 }) 
-canvas1.addEventListener('mouseup', (e)=>{
-    mouse_up(e, shapes, context1, canvas1)
+canvas1.addEventListener('mouseout', (e)=>{
+    mouse_out(e, shapes1, img1_type)
 })
-canvas1.onmouseout = mouse_out
+canvas1.addEventListener('mouseup', (e)=>{
+    mouse_up(e, shapes1, context1, canvas1, img1_type)
+})
 canvas1.addEventListener('mousemove', (e)=>{
-    mouse_move(e, shapes, offset1_x, offset1_y, context1, canvas1)
+    mouse_move(e, shapes1, offset1_x, offset1_y, context1, canvas1)
 })
 
 // canvas2
 canvas2.addEventListener('mousedown', (e)=>{
-    console.log('zz')
-    mouse_down(e, offset2_x, offset2_y, shapes, canvas2, context2)
+    mouse_down(e, offset2_x, offset2_y, shapes2, canvas2, context2)
 }) 
 canvas2.addEventListener('mouseup', (e)=>{
-    mouse_up(e, shapes, context2, canvas2)
+    mouse_up(e, shapes2, context2, canvas2, img2_type)
 })
-canvas2.onmouseout = mouse_out
+canvas2.addEventListener('mouseout', (e)=>{
+    mouse_out(e, shapes2, img2_type)
+})
 canvas2.addEventListener('mousemove', (e)=>{
-    mouse_move(e, shapes, offset2_x, offset2_y, context2, canvas2)
+    mouse_move(e, shapes2, offset2_x, offset2_y, context2, canvas2)
 })
 
 
 
+rect1.onclick = ()=>{
+    shapes1.push({type:'rect', x:100, y:100, width:100, height:100, color:'green'})
+    draw_shapes(context1, canvas1, shapes1)
+    send_shapes(shapes1, img1_type)
 
+}
+rect2.onclick = ()=>{
+    shapes2.push({type:'rect', x:100, y:100 , width:100, height:100, color:'green'})
+    console.log(shapes2)
+    draw_shapes(context2, canvas2, shapes2)
+    send_shapes(shapes2, img2_type)
+}
 
+ellipse1.onclick = ()=> {
+    shapes1.push({type:'ellipse', x:150, y:150 , Rx:25, Ry:50, color:'green'})
+    draw_shapes(context1, canvas1, shapes1)
+    send_shapes(shapes1, img1_type)
+}
 
+ellipse2.onclick = ()=> {
+    shapes2.push({type:'ellipse', x:150, y:150 , Rx:25, Ry:50, color:'green'})
+    draw_shapes(context2, canvas2, shapes2)
+    send_shapes(shapes2, img2_type)
+}
 
+del1.onclick = ()=>{
+    if(!shapes1){
+        return
+    }
+    shapes1.splice(current_shape_index, 1)
+    draw_shapes(context1, canvas1, shapes1)
+    send_shapes(shapes1, img1_type)
+}
 
+del2.onclick = ()=>{
+    if(!shapes2){
+        return
+    }
+    shapes2.splice(current_shape_index, 1)
+    draw_shapes(context2, canvas2, shapes2)
+    send_shapes(shapes2, img2_type)
+}
 
+let send_shapes = (shapes, imgType)=> {
 
+    $.ajax({
+        type: 'POST',
+        url: 'http://127.0.0.1:5000//uploadImage',
+        data: {shapes:shapes, imgType:imgType},
+        cache: false,
+        contentType: 'json',
+        processData: false,
+        success: function(data) {
+
+        },
+    });
+}
 
 
 
