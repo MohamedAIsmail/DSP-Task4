@@ -12,9 +12,10 @@ let current_bullet_points
 let current_shape_index 
 let is_dragging = false
 let offset_x, offset_y
-shapes.push({type:'ellipse', x:50, y:50 , Rx:35, Ry:50, color:'green'})
 
+shapes.push({type:'ellipse', x:50, y:50 , Rx:35, Ry:50, color:'green'})
 shapes.push({type:'rect', x:50, y:50 , width:100, height:100, color:'green'})
+
 
 
 // shapes.push({type:'elipse', x:50, y:50 , radiusX:35, radiusY:50, color:'green'})
