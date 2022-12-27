@@ -1,13 +1,10 @@
 #canvas {
     background-image: url('../assets/nature1.jpg');
 }
-
 #image {
     width: 400px;
     height: auto;
 }
-
-
 #display_image1{
     height: 40.5vh;
     width: 40.5vh;
@@ -15,7 +12,6 @@
     background-position: center;
     background-size: cover;
 }
-
 #display_image2{
     height: 40.5vh;
     width: 40.5vh;
@@ -36,7 +32,8 @@
 }
 
 canvas {
-    height: 40.5vh;
+    height: 42.5vh;
+    margin: auto;
 }
 
 /* general page styling */
@@ -66,7 +63,7 @@ input[type="file"] {
   }
 .import-btn {
     display: block;
-    width: 7rem;
+    max-width: 50%;
     padding: 0.6rem;
     margin-bottom: 0.5rem;
     cursor: pointer;
@@ -85,7 +82,7 @@ button {
     /* display: block; */
     padding: 0.9rem;
     margin: 0.5rem;
-    min-width: 100px;
+    /* min-width: 100px; */
     cursor: pointer;
     border: 5px #eee;
     border-radius: 3.5rem;
@@ -104,6 +101,8 @@ button:hover {
     min-height: 100%;
     /* padding: 1%; */
     box-sizing: border-box;
+    display: flex;
+    justify-content: center;
     /* background-color: #EEE; */
 }
 
@@ -144,7 +143,10 @@ button:hover {
 
 .section-container {
     width: 90%;
-    display: block;
+    /* display: block; */
+    display: flex;
+    justify-content: center;
+    /* height: 47vh; */
     margin-left: auto;
     margin-right: auto;
     margin-bottom: 0.6rem;
@@ -153,6 +155,11 @@ button:hover {
     padding: 0.6rem 0.8rem;
     border-radius: 0.9rem;
     text-align: center;
+}
+.section-container > div {
+    display: table-cell;
+    text-align: center;
+    vertical-align: top;
 }
 
 .left-section {
@@ -164,37 +171,44 @@ button:hover {
     /*height: 95vh;*/
 }
 
-.section-container>img {
+.left-section>img {
     max-height: 36.5vh;
+    display: block;
+    margin: auto;
 }
 
-.section-container>div {
-    display: table-cell;
-    vertical-align: top;
-}
+
 
 .middle-section {
     /* padding: 0.5rem; */
     border-radius: 2rem;
-    min-width: 33vw;
+    width: 27vw;
     margin-top: 2rem;
 }
 
 .button-array {
     text-align: center;
     display: flex;
-    align-items: center;
+    justify-content: center;
 }
 
 .right-section {
     /* padding: 0.5rem; */
     border-radius: 2rem;
     text-align: center;
-    min-width: 33vw;
+    width:32vw;
 }
 
 #img_recon {
-    height: 50vh;
+    height:40vh;
+    text-align: center;
 }
 
 /* radion button styling */
+li {
+    display:inline-block;
+    list-style: none;
+}
+ul {
+    display: inline;
+}

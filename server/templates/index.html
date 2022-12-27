@@ -5,7 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fourier usage in compression demo</title>
-
+    <!-- Add icon library -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.6.1/d3.min.js"></script>
     <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 
@@ -25,7 +26,7 @@
                 <div class="section-container">
                     <form id="upload-image1-form" method="post" enctype="multipart/form-data">
                         <label for="image_input1" class="import-btn">
-                            <i></i> Upload image
+                            <i class="fa fa-cloud-upload"></i> Upload image
                         </label>
                         <input id="image_input1" type="file" name="Image_File1" accept="image/jpeg, image/png, image/jpg"></input>
                         <div id="display_image1"></div>
@@ -45,34 +46,56 @@
 
             <!-- Middle section -->
             <div class="middle-section">
+                <p class="title">Crop magnitude</p>
                 <div class="section-container">
-                    <p class="title">Crop magnitude</p>
+                    <!-- mag radio group -->
+                    <!-- <ul>
+                        <li>
+                          <input type="radio" name="mag-select" value="image_1" />
+                          image 1
+                          <input type="radio" name="mag-select" 
+                          value="image_2" id="custom_venuetype_private" />
+                          image 2
+                        </li>
+                    </ul> -->
                     <!-- magnitude canvas -->
                     <div>
                         <canvas id="magCanvas" width="300" height="300" style="border:1px solid #000000;">
                         </canvas>
                     </div>
                     <div class="button-array">
-                        <button id="rect1">rectangle</button>
-                        <button id="ellipse1">ellipse</button>
-                        <button id="del1">delete</button>
+                        <!-- <button >rectangle</button> -->
+                        <button id="rect1"><i class="fa fa-square"></i></button> <br>
+                        <button id="ellipse1"><i class="fa fa-circle"></i></button> <br>
+                        <button id="del1"><i class="fa fa-trash"></i></button>
                         <!-- <img src="../static/assets/nature1.jpg" class="infographic" id="mid-figure1" alt=""> -->
                     </div>
+                    
                 </div>
+                <p class="title">Crop phase</p>
                 <div class="section-container">
                     <!-- phase canvas -->
-                    <p class="title">Crop phase</p>
-            
+                    <!-- mag radio group -->
+                    <!-- <ul>
+                        <li>
+                        <input type="radio" name="phase-select" value="image_1" />
+                        image 1
+                        <input type="radio" name="phase-select" 
+                        value="image_2" id="custom_venuetype_private" />
+                        image 2
+                        </li>
+                    </ul> -->
                     <div>
                         <canvas id="phaseCanvas" width="300" height="300" style="border:1px solid #000000;">
                         </canvas>
                     </div>
                     <div class="button-array">
-                        <button id="rect2">rectangle</button> <br>
-                        <button id="ellipse2">ellipse</button> <br>
-                        <button id="del2">delete</button> <br>
+                        <button id="rect2"><i class="fa fa-square"></i></button> <br>
+                        <button id="ellipse2"><i class="fa fa-circle"></i></button> <br>
+                        <button id="del2"><i class="fa fa-trash"></i></button> <br>
                         <!-- <img src="../static/assets/nature1.jpg" class="infographic" id="mid-figure1" alt=""> -->
                     </div>
+                    
                     <!-- <img src="../static/assets/nature1.jpg" class="infographic" id="mid-figure2" alt=""> -->
                 </div>
             </div>
@@ -80,20 +103,21 @@
             <div id="right-section" class="right-section">
                 <div class="section-container">
                     <p class="title">Output</p>
-                    <img src="../static/assets/nature1.jpg" class="infographic" id="img_recon" alt="">
                     <br>
-                    <button>reconstruct</button>
+                    <img src="../static/assets/nature1.jpg" class="infographic" id="img_recon" alt="">
+                    <!-- <button>reconstruct</button> -->
                 </div>
                 <div class="section-container">
                     <p class="title">
                         Made by SBME 2024 team
+                        <br>
                     </p>
                     <p class="title" style="text-align: left;">
                         <br>
                         - Ahmed Mohamed Elsarta <br>
-                        - Maha Medhat <br>
+                        - Maha Medhat Fathy <br>
                         - Mohamed Ahmed Ismail<br>
-                        - Yousef Kadry
+                        - Yousef Kadry Anwar
                     </p>
                 </div>
             </div>
