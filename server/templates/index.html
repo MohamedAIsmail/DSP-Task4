@@ -104,10 +104,10 @@
         const update_element = () => {
             console.log("hello")
             // create a new timestamp 
-            var imgURL = "nature1.jpg"
-            var timestamp = new Date().getTime(); 
-            var canvas = document.getElementById("canvas"); 
-            var queryString = "?t=" + timestamp;    
+            let imgURL = "../static/assets/nature1.jpg"
+            let timestamp = new Date().getTime(); 
+            let canvas = document.getElementById("canvas"); 
+            let queryString = "?t=" + timestamp;    
             canvas.style.backgroundImage = "url(" + imgURL + queryString + ")" ;    
         }
     </script>
