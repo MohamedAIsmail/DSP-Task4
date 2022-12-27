@@ -1,3 +1,11 @@
+
+#magCanvas {
+    background-image: url('../assets/nature1.jpg');
+}
+
+#phaseCanvas {
+    background-image: url('../assets/nature1.jpg');
+}
 /* general page styling */
 * {
     padding: 0;
@@ -82,7 +90,7 @@ button:hover {
     min-width: 25vw;
     /*height: 95vh;*/
 }
-.section-container > img {
+.section-container > img, .section-container > canvas {
     max-height: 36.5vh;
 }
 .middle-section {
@@ -98,11 +106,9 @@ button:hover {
     min-width: 33vw;
 }
 
-
-
-
-
-
-#canvas {
-    background-image: url('../assets/nature1.jpg');
+#img_recon {
+    height: 50vh;
 }
+
+
+
