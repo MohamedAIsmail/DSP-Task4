@@ -32,18 +32,24 @@
           <div class="middle-section">
             <div class="section-container">
               <p class ="title">Crop magnitude</p>
-             <img src="../static/assets/nature1.jpg" class="infographic" id="mid-figure1" alt="">
+              <canvas id="magCanvas" width="300" height="300" style="border:1px solid #000000;">     
+              </canvas>
+              <div class="button array">
+              <!-- <img src="../static/assets/nature1.jpg" class="infographic" id="mid-figure1" alt=""> -->
+              </div>
            </div>
             <div class="section-container">
               <p class ="title">Crop phase</p>
-             <img src="../static/assets/nature1.jpg" class="infographic" id="mid-figure2" alt="">
+              <canvas id="phaseCanvas" width="300" height="300" style="border:1px solid #000000;">     
+              </canvas>
+             <!-- <img src="../static/assets/nature1.jpg" class="infographic" id="mid-figure2" alt=""> -->
            </div>
           </div>
           <!-- Right section of the website -->
           <div id="right-section" class="right-section">
             <div class="section-container">
                 <p class ="title">Output</p>
-               <img src="../static/assets/nature1.jpg" class="infographic" id="mid-figure2" alt="">
+               <img src="../static/assets/nature1.jpg" class="infographic" id="img_recon" alt="">
                <br>
                <button>reconstruct</button>
              </div>
@@ -65,17 +71,16 @@
         </div>
       </div>
 <!-- 
-    <canvas id="canvas" width="300" height="300" style="border:1px solid #000000;">     
-    </canvas>    -->
+        -->
     
     <script>
         const update_element = () => {
             console.log("hello")
             // create a new timestamp 
-            var imgURL = "../static/assets/nature1.jpg"
-            var timestamp = new Date().getTime(); 
-            var canvas = document.getElementById("canvas"); 
-            var queryString = "?t=" + timestamp;    
+            let imgURL = "../static/assets/nature1.jpg"
+            let timestamp = new Date().getTime(); 
+            let canvas = document.getElementById("canvas"); 
+            let queryString = "?t=" + timestamp;    
             canvas.style.backgroundImage = "url(" + imgURL + queryString + ")" ;    
         }
     </script>
