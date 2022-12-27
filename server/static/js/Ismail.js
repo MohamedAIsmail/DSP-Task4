@@ -1,8 +1,11 @@
 let Image1_Magnitude_path = "../static/assets/Image1_Magnitude.jpg"
 let Image2_Phase_path = "../static/assets/Image2_Phase.jpg"
+let OutputImage_path = "../static/assets/Output.jpg"
 
 let Image1_Magnitude = document.getElementById("magCanvas")
 let Image2_Phase = document.getElementById("phaseCanvas")
+let OutputImage = document.getElementById("outputCanvas")
+
 
 const image_input1 = document.querySelector("#image_input1")
 const image_input2 = document.querySelector("#image_input2")
@@ -31,19 +34,26 @@ image_input2.addEventListener("change", function() {
 
     reader.readAsDataURL(this.files[0])
 })
-
+let is_uploaded1 = false
+let is_uploaded2 = false
 $(function() {
-    $('#image_input1').change(function() {
+    $('#image_input1').change(function () {
+        is_uploaded1 = true
         uploadImage('#upload-image1-form')
-        setTimeout(() => {
-            update_element(Image1_Magnitude, Image1_Magnitude_path)
-        }, 500);
+        update_element(Image1_Magnitude, Image1_Magnitude_path)
+        if (is_uploaded1 && is_uploaded2) {
+            update_element(OutputImage, OutputImage_path)
+        }
     });
     $('#image_input2').change(function() {
         uploadImage('#upload-image2-form')
-        setTimeout(() => {
-            update_element(Image2_Phase, Image2_Phase_path)
-        }, 500);
+        is_uploaded2 = true
+        update_element(Image2_Phase, Image2_Phase_path)
+    
+        if (is_uploaded1 && is_uploaded2) {
+            update_element(OutputImage, OutputImage_path)
+        }
+    
     });
 });
 
@@ -65,8 +75,11 @@ let uploadImage = (formElement) => {
 
 //function that takes the element and a url, and updates it 
 let update_element = (imgElement, imgURL) => {
-	 // create a new timestamp 
-	 let timestamp = new Date().getTime();  
-	 let queryString = "?t=" + timestamp;    
-     imgElement.style.backgroundImage = "url(" + imgURL + queryString + ")" ;
+    // create a new timestamp 
+    setTimeout(() => {
+
+        let timestamp = new Date().getTime();
+        let queryString = "?t=" + timestamp;
+        imgElement.style.backgroundImage = "url(" + imgURL + queryString + ")";
+    }, 800)
 }

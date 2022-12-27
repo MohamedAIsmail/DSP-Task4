@@ -7,6 +7,10 @@ import numpy as np
 
 outputAmp = 0
 outputPhase = 0
+originalPhase = 0
+originalAmp = 0
+magn_shapes = []
+phase_shapes = []
 
 
 @app.route('/uploadImage',  methods=['POST'])
@@ -27,9 +31,12 @@ def uploadImage():
         Img1_amplitude, Img1_phase, Img2_amplitude, Img2_phase = fn.applyFFTShift(
             Image1, Image2)
 
-        global outputAmp, outputPhase
+        global outputAmp, outputPhase, originalAmp, originalPhase
         outputAmp = Img1_amplitude
+        originalAmp = Img1_amplitude
+
         outputPhase = Img2_phase
+        originalPhase = Img2_phase
 
         fn.saveMagnitudeImages(
             Img1_amplitude, "server//static//assets//Image1_Magnitude.jpg")
@@ -41,48 +48,55 @@ def uploadImage():
             Img2_phase, "server//static//assets//Image2_Phase.jpg")
 
         Output = fn.finalImageFormation(Img1_amplitude, Img2_phase)
+        fn.saveOutputImage(Output)
 
     return []
 
 
 @app.route('/updateOutput',  methods=['POST'])
 def updateOutput():
-    global outputAmp, outputPhase
+    global outputAmp, outputPhase, originalAmp, originalPhase, magn_shapes, phase_shapes
 
     Output_Magnitudes = []
     Output_Phases = []
     jsonData = request.get_json()
 
-    shapes = jsonData['shapes']
-    imgType = jsonData['imgType']
+    shapes1 = jsonData['shapes1']
+    shapes2 = jsonData['shapes2']
 
-    if (imgType == "magnitude"):
-        for shape in shapes:
+    if (len(shapes1) != 0):
+        for shape in shapes1:
             if (shape["type"] == 'rect'):
                 Output_Magnitudes.append(fn.fourier_masker(
-                    shape["x"], shape["y"], shape["width"], shape["height"], outputAmp))
+                    shape["x"], shape["y"], shape["width"], shape["height"], originalAmp))
 
-            if (shapes == 'ellipse'):
+            if (shape["type"] == 'ellipse'):
                 Output_Magnitudes.append(fn.fourier_ellpise_masker(
-                    shape["x"], shape["y"], shape["Rx"], shape["Ry"], outputAmp))
-        outputAmp = Output_Magnitudes[0]
-        for shapeOutput in Output_Magnitudes:
-            outputAmp = np.logical_or(outputAmp, shapeOutput)
+                    shape["x"], shape["y"], shape["Rx"], shape["Ry"], originalAmp))
+            outputAmp = Output_Magnitudes[0]
+            for shapeOutput in Output_Magnitudes:
+                outputAmp = np.logical_or(outputAmp, shapeOutput) * originalAmp
+    else:
+        outputAmp = originalAmp
 
-    if (imgType == "phase"):
-        for shape in shapes:
+    if (len(shapes2) != 0):
+        for shape in shapes2:
             if (shape["type"] == 'rect'):
                 Output_Phases.append(fn.fourier_masker(
-                    shape['x'], shape['y'], shape["width"], shape["height"], outputPhase))
+                    shape['x'], shape['y'], shape["width"], shape["height"], originalPhase))
 
-            if (shapes == 'ellipse'):
+            if (shape["type"] == 'ellipse'):
                 Output_Phases.append(fn.fourier_ellpise_masker(
-                    shape['x'], shape['y'], shape["Rx"], shape["Ry"], outputPhase))
+                    shape['x'], shape['y'], shape["Rx"], shape["Ry"], originalPhase))
         outputPhase = Output_Phases[0]
         for shapeOutput in Output_Phases:
-            outputPhase = np.logical_or(outputPhase, shapeOutput)
+            outputPhase = np.logical_or(
+                outputPhase, shapeOutput) * originalPhase
+    else:
+        outputPhase = originalPhase
 
     Output = fn.finalImageFormation(outputAmp, outputPhase)
     fn.saveOutputImage(Output)
+    print("DONE")
 
     return []

@@ -157,6 +157,7 @@ let mouse_up = (event, shapes, context, canvas, imgType)=> {
         select_shape(shapes[current_shape_index], context)
         is_dragging = false;
         send_shapes(shapes, imgType)
+        update_element(OutputImage, OutputImage_path)
 
         return
     }
@@ -166,6 +167,7 @@ let mouse_up = (event, shapes, context, canvas, imgType)=> {
         select_shape(shapes[current_shape_index], context)
         scaling_point_drag = false
         send_shapes(shapes, imgType)
+        update_element(OutputImage, OutputImage_path)
     }
     else{
         return
@@ -181,6 +183,7 @@ let mouse_out = (event, shapes, imgType)=> {
     is_dragging = false;
     scaling_point_drag = false
     send_shapes(shapes, imgType)
+    update_element(OutputImage, OutputImage_path)
 
 
 }
@@ -292,6 +295,7 @@ rect1.onclick = ()=>{
     shapes1.push({type:'rect', x:100, y:100, width:100, height:100, color:'green'})
     draw_shapes(context1, canvas1, shapes1)
     send_shapes(shapes1, img1_type)
+    update_element(OutputImage, OutputImage_path)
 
 }
 rect2.onclick = ()=>{
@@ -299,18 +303,21 @@ rect2.onclick = ()=>{
     console.log(shapes2)
     draw_shapes(context2, canvas2, shapes2)
     send_shapes(shapes2, img2_type)
+    update_element(OutputImage, OutputImage_path)
 }
 
 ellipse1.onclick = ()=> {
     shapes1.push({type:'ellipse', x:150, y:150 , Rx:25, Ry:50, color:'green'})
     draw_shapes(context1, canvas1, shapes1)
     send_shapes(shapes1, img1_type)
+    update_element(OutputImage, OutputImage_path)
 }
 
 ellipse2.onclick = ()=> {
     shapes2.push({type:'ellipse', x:150, y:150 , Rx:25, Ry:50, color:'green'})
     draw_shapes(context2, canvas2, shapes2)
     send_shapes(shapes2, img2_type)
+    update_element(OutputImage, OutputImage_path)
 }
 
 del1.onclick = ()=>{
@@ -320,6 +327,7 @@ del1.onclick = ()=>{
     shapes1.splice(current_shape_index, 1)
     draw_shapes(context1, canvas1, shapes1)
     send_shapes(shapes1, img1_type)
+    update_element(OutputImage, OutputImage_path)
 }
 
 del2.onclick = ()=>{
@@ -329,14 +337,15 @@ del2.onclick = ()=>{
     shapes2.splice(current_shape_index, 1)
     draw_shapes(context2, canvas2, shapes2)
     send_shapes(shapes2, img2_type)
+    update_element(OutputImage, OutputImage_path)
 }
 
-let send_shapes = (shapes, imgType)=> {
+let send_shapes = ()=> {
 
     $.ajax({
         type: 'POST',
         url: 'http://127.0.0.1:5000//updateOutput',
-        data: JSON.stringify({shapes, imgType}),
+        data: JSON.stringify({shapes1, shapes2}),
         cache: false,
         dataType: 'json',
         contentType: 'application/json',
