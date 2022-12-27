@@ -35,11 +35,15 @@ image_input2.addEventListener("change", function() {
 $(function() {
     $('#image_input1').change(function() {
         uploadImage('#upload-image1-form')
-        update_element(Image1_Magnitude, Image1_Magnitude_path)
+        setTimeout(() => {
+            update_element(Image1_Magnitude, Image1_Magnitude_path)
+        }, 500);
     });
     $('#image_input2').change(function() {
         uploadImage('#upload-image2-form')
-        update_element(Image2_Phase, Image2_Phase_path)
+        setTimeout(() => {
+            update_element(Image2_Phase, Image2_Phase_path)
+        }, 500);
     });
 });
 

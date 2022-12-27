@@ -335,10 +335,11 @@ let send_shapes = (shapes, imgType)=> {
 
     $.ajax({
         type: 'POST',
-        url: 'http://127.0.0.1:5000//uploadImage',
-        data: {shapes:shapes, imgType:imgType},
+        url: 'http://127.0.0.1:5000//updateOutput',
+        data: JSON.stringify({shapes, imgType}),
         cache: false,
-        contentType: 'json',
+        dataType: 'json',
+        contentType: 'application/json',
         processData: false,
         success: function(data) {
 

@@ -47,3 +47,46 @@ def scale(image_array):
     return image
 
 
+def fourier_masker(x, y, width, height, rect_Image):
+    Output = np.zeros((300, 300))
+
+    Output[y: y+height, x:x +
+           width] = rect_Image[y:y+height, x:x+width]
+
+    return Output
+
+
+def fourier_ellpise_masker(x0, y0, Rx, Ry, ellipse_Image):
+
+    x1 = x0 - Rx
+    x2 = x0 + Rx
+
+    y1 = y0 - Ry
+    y2 = y0 + Ry
+    x = list(range(x1, x2, 1))
+    x = np.array(x, dtype=float)  # x values of interest
+
+    y = list(range(y1, y2, 1))
+    # y values of interest, as a "column" array
+    y = np.array(y, dtype=float)[:, None]
+
+    # True for points inside the ellipse
+    ellipse = ((x-x0)/Rx)**2 + ((y-y0)/Ry)**2 <= 1
+    ellipse = ellipse.astype(int)
+
+    Output = np.zeros((300, 300))
+    Output[x1:x2, y1:y2] = ellipse_Image[x1:x2, y1:y2]
+    Output[x1:x2,
+           y1:y2] = Output[x1:x2, y1:y2] * ellipse
+    return Output
+
+
+def saveOutputImage(FinalImage):
+    FinalImage = scale(FinalImage)
+    cv2.imwrite("server//static//assets//Output.jpg", FinalImage)
+
+
+def finalImageFormation(outputAmpltiude, outputPhase):
+    OutputImage = np.multiply(outputAmpltiude, np.exp(1j * outputPhase))
+    FinalImage = np.real(np.fft.ifft2(OutputImage))
+    return np.abs(FinalImage)
