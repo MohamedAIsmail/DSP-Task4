@@ -31,6 +31,7 @@ let img2_type = 'phase'
 // shapes.push({type:'rect', x:50, y:50 , width:100, height:100, color:'green'})
 
 
+
 // shapes.push({type:'elipse', x:50, y:50 , radiusX:35, radiusY:50, color:'green'})
 
 const select_shape = (shape, context) => {
