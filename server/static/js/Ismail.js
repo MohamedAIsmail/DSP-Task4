@@ -1,5 +1,12 @@
 const image_input1 = document.querySelector("#image_input1")
 const image_input2 = document.querySelector("#image_input2")
+
+let Image1_Magnitude_path = "../static/assets/Image1_Magnitude.jpg"
+let Image2_Phase_path = "../static/assets/Image2_Phase.jpg"
+
+let Image1_Magnitude = document.getElementById("magCanvas")
+let Image2_Phase = document.getElementById("phaseCanvas")
+
 var uploaded_image1 = "";
 var uploaded_image2 = "";
 
@@ -27,11 +34,13 @@ image_input2.addEventListener("change", function() {
 })
 
 $(function() {
-    $('#image_input1').click(function() {
+    $('#image_input1').change(function() {
         uploadImage('#upload-image1-form')
+        update_element(Image1_Magnitude, Image1_Magnitude_path)
     });
-    $('#image_input2').click(function() {
+    $('#image_input2').change(function() {
         uploadImage('#upload-image2-form')
+        update_element(Image2_Phase, Image2_Phase_path)
     });
 });
 
@@ -48,4 +57,13 @@ let uploadImage = (formElement) => {
                 console.log('Success!');
             },
         });
+}
+
+
+//function that takes the element and a url, and updates it 
+const update_element = (imgElement, imgURL) => {
+	 // create a new timestamp 
+	 let timestamp = new Date().getTime();  
+	 let queryString = "?t=" + timestamp;    
+	 imgElement.src = imgURL + queryString;    
 }

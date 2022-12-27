@@ -15,25 +15,88 @@
 
 <body>
 
-    <form id="upload-image1-form" method="post" enctype="multipart/form-data">
-        <label for = "file"> Select first image </label>
-        <input id="image_input1" type="file" name="Image_File1" accept="image/jpeg, image/png, image/jpg"></input>
-        <div id="display_image1"></div>
-    </form>
 
-    <form id="upload-image2-form" method="post" enctype="multipart/form-data">
-        <label for="file"> Select second image </label>
-        <input id="image_input2" type="file" name="Image_File2" accept="image/jpeg, image/png, image/jpg"></input>
-        <div id="display_image2"></div>
-    </form>
+    <div class="page-container">
+        <!-- Rest of the page -->
+        <div class="mid-section">
+            <!-- Left section -->
+            <div id="left-section" class="left-section">
+                <!-- upper left img -->
+                <div class="section-container">
+                    <form id="upload-image1-form" method="post" enctype="multipart/form-data">
+                        <label for="file"> Select first image </label>
+                        <input id="image_input1" type="file" name="Image_File1" accept="image/jpeg, image/png, image/jpg"></input>
+                        <div id="display_image1"></div>
+                    </form>
+                </div>
+                <!-- lower left img -->
+                <div class="section-container">
+                    <form id="upload-image2-form" method="post" enctype="multipart/form-data">
+                        <label for="file"> Select second image </label>
+                        <input id="image_input2" type="file" name="Image_File2" accept="image/jpeg, image/png, image/jpg"></input>
+                        <div id="display_image2"></div>
+                    </form>
+                </div>
+            </div>
 
-   
-    
-    
-
-    <canvas id="canvas" width="300" height="300" style="border:1px solid #000000;">
-        
-    </canvas>
+            <!-- Middle section -->
+            <div class="middle-section">
+                <div class="section-container">
+                    <p class="title">Crop magnitude</p>
+                    <!-- magnitude canvas -->
+                    <div>
+                        <canvas id="magCanvas" width="300" height="300" style="border:1px solid #000000;">
+                        </canvas>
+                    </div>
+                    <div class="button-array">
+                        <button id="rect1">rectangle</button> <br>
+                        <button id="ellipse1">ellipse</button> <br>
+                        <button id="del1">delete</button> <br>
+                        <!-- <img src="../static/assets/nature1.jpg" class="infographic" id="mid-figure1" alt=""> -->
+                    </div>
+                </div>
+                <div class="section-container">
+                    <!-- phase canvas -->
+                    <p class="title">Crop phase</p>
+            
+                    <div>
+                        <canvas id="phaseCanvas" width="300" height="300" style="border:1px solid #000000;">
+                        </canvas>
+                    </div>
+                    <div class="button-array">
+                        <button id="rect2">rectangle</button> <br>
+                        <button id="ellipse2">ellipse</button> <br>
+                        <button id="del2">delete</button> <br>
+                        <!-- <img src="../static/assets/nature1.jpg" class="infographic" id="mid-figure1" alt=""> -->
+                    </div>
+                    <!-- <img src="../static/assets/nature1.jpg" class="infographic" id="mid-figure2" alt=""> -->
+                </div>
+            </div>
+            <!-- Right section of the website -->
+            <div id="right-section" class="right-section">
+                <div class="section-container">
+                    <p class="title">Output</p>
+                    <img src="../static/assets/nature1.jpg" class="infographic" id="img_recon" alt="">
+                    <br>
+                    <button>reconstruct</button>
+                </div>
+                <div class="section-container">
+                    <p class="title">
+                        Made by SBME 2024 team
+                    </p>
+                    <p class="title" style="text-align: left;">
+                        <br>
+                        - Ahmed Mohamed Elsarta <br>
+                        - Maha Medhat <br>
+                        - Mohamed Ahmed Ismail<br>
+                        - Yousef Kadry
+                    </p>
+                </div>
+            </div>
+            
+            
+            </div>
+            </div>
 
     <button onclick="update_element()">update</button>
 
@@ -48,8 +111,6 @@
             canvas.style.backgroundImage = "url(" + imgURL + queryString + ")" ;    
         }
     </script>
-    <!-- <img id="img" width="400" height="300" src = "https://image3.mouthshut.com/images/ImagesR/imageuser_m/2017/11/925747536-4559193-1.png?rnd=38062">
-        </img> -->
     <script src="../static/js/script.js"></script>
     <script src="../static/js/Ismail.js"></script>
 </body>
