@@ -1,19 +1,24 @@
 // var image = new Image();
-let canvas = document.getElementById('canvas');
+let canvas1 = document.getElementById('magCanvas');
+let canvas2 = document.getElementById('phaseCanvas');
 // let btn = document.getElementById('btn')
-let context = canvas.getContext('2d');
+let context1 = canvas1.getContext('2d');
+let context2 = canvas2.getContext('2d');
 
-let canvas_width = canvas.width;
-let canvas_height = canvas.height;
+
+// let canvas_width = canvas.width;
+// let canvas_height = canvas.height;
 
 let startX, startY
 let shapes = [];
-let current_bullet_points 
+let current_bullet_points = []
 let current_shape_index 
 let is_dragging = false
 let scaling_point_drag = false
 let current_dragged_point
-let offset_x, offset_y
+let offset1_x, offset1_y
+let offset2_x, offset2_y
+
 shapes.push({type:'ellipse', x:50, y:50 , Rx:35, Ry:50, color:'green'})
 
 shapes.push({type:'rect', x:50, y:50 , width:100, height:100, color:'green'})
@@ -55,11 +60,11 @@ const select_shape = (shape, context) => {
 
 let get_offset = (canvas)=> {
     let canvas_offset = canvas.getBoundingClientRect();
-    offset_x = canvas_offset.left
-    offset_y = canvas_offset.top
+    let offset_x = canvas_offset.left
+    let offset_y = canvas_offset.top
+    return [offset_x, offset_y]
 }
-
-get_offset()
+[offset1_x, offset1_y] = get_offset(canvas1)
 
 let draw = (shape, context)=>{
     context.fillStyle = shape.color;
@@ -77,11 +82,11 @@ let draw_shapes = (context, canvas, shapes)=>{
     context.clearRect(0, 0, canvas.width, canvas.height)
     context.globalAlpha = 0.5
     for(let shape of shapes){
-        draw(shape)
+        draw(shape, context)
     }
 }
 
-draw_shapes()
+draw_shapes(context1, canvas1, shapes)
 
 let is_mouse_in_shape = (startX, startY, shape)=> {
     let shape_left, shape_right, shape_top, shape_bottom
@@ -106,46 +111,45 @@ let is_mouse_in_shape = (startX, startY, shape)=> {
     return false;
 }
 
-let mouse_down = (event, offset_x, offset_y, shapes)=>{
+let mouse_down = (event, offset_x, offset_y, shapes, canvas, context)=>{
     event.preventDefault();
     startX = parseInt(event.clientX - offset_x);
     startY = parseInt(event.clientY - offset_y);
     let index = 0
     for(let shape of shapes){
-        
         if(is_mouse_in_shape(startX, startY, shape)){
             current_shape_index = index;
             is_dragging = true
-            draw_shapes()
-            select_shape(shapes[current_shape_index])
+            draw_shapes(context, canvas, shapes)
+            select_shape(shapes[current_shape_index], context)
         }
         index++;    
 
     }
         for(let point of current_bullet_points){
-        
             if(is_mouse_in_shape(startX, startY, point)){
+                console.log('zz')
+
                 current_dragged_point = point.side
                 scaling_point_drag = true
             }
             
     }
-    
 }
 
 
-let mouse_up = (event, shapes, current_shape_index, is_dragging, scaling_point_drag)=> {
+let mouse_up = (event, shapes, context, canvas)=> {
     if(is_dragging){
         event.preventDefault();
-        draw_shapes()
-        select_shape(shapes[current_shape_index])
+        draw_shapes(context, canvas, shapes)
+        select_shape(shapes[current_shape_index], context)
         is_dragging = false;
         return
     }
     else if(scaling_point_drag){
         event.preventDefault();
-        draw_shapes()
-        select_shape(shapes[current_shape_index])
+        draw_shapes(context, canvas, shapes)
+        select_shape(shapes[current_shape_index], context)
         scaling_point_drag = false
     }
     else{
@@ -154,7 +158,7 @@ let mouse_up = (event, shapes, current_shape_index, is_dragging, scaling_point_d
 }
 
 
-let mouse_out = (event, is_dragging)=> {
+let mouse_out = (event)=> {
     if(!is_dragging){
         return
     }
@@ -163,7 +167,7 @@ let mouse_out = (event, is_dragging)=> {
 
 }
 
-let mouse_move = (event, shapes, current_shape_index, scaling_point_drag)=> {
+let mouse_move = (event, shapes, offset_x, offset_y, context, canvas)=> {
     let mouseX = parseInt(event.clientX - offset_x);
     let mouseY = parseInt(event.clientY - offset_y);
     if(is_dragging){
@@ -177,13 +181,13 @@ let mouse_move = (event, shapes, current_shape_index, scaling_point_drag)=> {
         current_shape.x += dx;
         current_shape.y += dy;
 
-        draw_shapes()
-        select_shape(shapes[current_shape_index])
+        draw_shapes(context, canvas, shapes)
+        select_shape(shapes[current_shape_index], context)
         startX = mouseX
         startY = mouseY
     }
     else if (scaling_point_drag){
-
+        console.log('gg')
         event.preventDefault();
         let current_shape = shapes[current_shape_index]
         let dx = mouseX - startX;
@@ -229,7 +233,7 @@ let mouse_move = (event, shapes, current_shape_index, scaling_point_drag)=> {
         startX = mouseX
         startY = mouseY
         draw_shapes()
-        select_shape(shapes[current_shape_index])
+        select_shape(shapes[current_shape_index], context)
     }
     else{
         return
@@ -237,10 +241,19 @@ let mouse_move = (event, shapes, current_shape_index, scaling_point_drag)=> {
 }
 
 
-canvas.onmousedown = mouse_down;
-canvas.onmouseup = mouse_up;
-canvas.onmouseout = mouse_out;
-canvas.onmousemove = mouse_move;
+// canvas1.onmousedown = mouse_down(offset1_x, offset1_y, shapes)
+canvas1.addEventListener('mousedown', (e)=>{
+    mouse_down(e, offset1_x, offset1_y, shapes, canvas1, context1)
+}) 
+// canvas1.onmouseup = mouse_up(shapes);
+canvas1.addEventListener('mouseup', (e)=>{
+    mouse_up(e, shapes, context1, canvas1)
+})
+canvas1.onmouseout = mouse_out
+// canvas1.onmousemove = mouse_move(shapes, offset1_x, offset1_y, context1, canvas1)
+canvas1.addEventListener('mousemove', (e)=>{
+    mouse_move(e, shapes, offset1_x, offset1_y, context1, canvas1)
+})
 
 
 
