@@ -21,7 +21,7 @@ shapes.push({type:'rect', x:50, y:50 , width:100, height:100, color:'green'})
 
 // shapes.push({type:'elipse', x:50, y:50 , radiusX:35, radiusY:50, color:'green'})
 
-const select_shape = (shape) => {
+const select_shape = (shape, context) => {
     if(shape.type == 'rect'){
     context.strokeRect(shape.x, shape.y, shape.width, shape.height);
     
@@ -53,7 +53,7 @@ const select_shape = (shape) => {
         current_bullet_points = bullet_points;
 };
 
-let get_offset = ()=> {
+let get_offset = (canvas)=> {
     let canvas_offset = canvas.getBoundingClientRect();
     offset_x = canvas_offset.left
     offset_y = canvas_offset.top
@@ -61,7 +61,7 @@ let get_offset = ()=> {
 
 get_offset()
 
-let draw = (shape)=>{
+let draw = (shape, context)=>{
     context.fillStyle = shape.color;
     if(shape.type == 'rect'){
         context.fillRect(shape.x, shape.y, shape.width, shape.height)
@@ -73,8 +73,8 @@ let draw = (shape)=>{
     }
 }
 
-let draw_shapes = ()=>{
-    context.clearRect(0, 0, canvas_width, canvas_height)
+let draw_shapes = (context, canvas, shapes)=>{
+    context.clearRect(0, 0, canvas.width, canvas.height)
     context.globalAlpha = 0.5
     for(let shape of shapes){
         draw(shape)
@@ -106,7 +106,7 @@ let is_mouse_in_shape = (startX, startY, shape)=> {
     return false;
 }
 
-let mouse_down = (event)=>{
+let mouse_down = (event, offset_x, offset_y, shapes)=>{
     event.preventDefault();
     startX = parseInt(event.clientX - offset_x);
     startY = parseInt(event.clientY - offset_y);
@@ -134,7 +134,7 @@ let mouse_down = (event)=>{
 }
 
 
-let mouse_up = (event)=> {
+let mouse_up = (event, shapes, current_shape_index, is_dragging, scaling_point_drag)=> {
     if(is_dragging){
         event.preventDefault();
         draw_shapes()
@@ -154,7 +154,7 @@ let mouse_up = (event)=> {
 }
 
 
-let mouse_out = (event)=> {
+let mouse_out = (event, is_dragging)=> {
     if(!is_dragging){
         return
     }
@@ -163,7 +163,7 @@ let mouse_out = (event)=> {
 
 }
 
-let mouse_move = (event)=> {
+let mouse_move = (event, shapes, current_shape_index, scaling_point_drag)=> {
     let mouseX = parseInt(event.clientX - offset_x);
     let mouseY = parseInt(event.clientY - offset_y);
     if(is_dragging){
@@ -188,7 +188,6 @@ let mouse_move = (event)=> {
         let current_shape = shapes[current_shape_index]
         let dx = mouseX - startX;
         let dy = mouseY - startY;
-        console.log(current_dragged_point)
         if(current_dragged_point == 'left'){
             if(current_shape.type == 'ellipse'){
                 current_shape.x +=  0.5*dx
