@@ -17,13 +17,12 @@
           <div id="left-section" class="left-section">
             <!-- upper left img -->
            <div class="section-container">
-            <button id="img1_upload">upload</button> <br>
+            <button id="img1_upload">Upload image</button>
             <img src="../static/assets/nature1.jpg" alt="">
            </div>
            <!-- lower left img -->
            <div class="section-container">
-            <button onclick="update_element()">upload</button>
-            <br>
+            <button>Upload image</button>
             <img id="img2_upload" src="../static/assets/nature1.jpg" alt="">
            </div>
           </div>
@@ -32,16 +31,32 @@
           <div class="middle-section">
             <div class="section-container">
               <p class ="title">Crop magnitude</p>
-              <canvas id="magCanvas" width="300" height="300" style="border:1px solid #000000;">     
-              </canvas>
-              <div class="button array">
+              <!-- magnitude canvas -->
+              <div>
+                <canvas id="phaseCanvas" width="300" height="300" style="border:1px solid #000000;">     
+                </canvas>
+              </div>
+              <div class="button-array">
+                <button>rectangle</button> <br>
+                <button>ellipse</button> <br>
+                <button>delete</button> <br>
               <!-- <img src="../static/assets/nature1.jpg" class="infographic" id="mid-figure1" alt=""> -->
               </div>
            </div>
             <div class="section-container">
+              <!-- phase canvas -->
               <p class ="title">Crop phase</p>
-              <canvas id="phaseCanvas" width="300" height="300" style="border:1px solid #000000;">     
-              </canvas>
+              
+              <div>
+                <canvas id="magCanvas" width="300" height="300" style="border:1px solid #000000;">     
+                </canvas>
+              </div>
+              <div class="button-array">
+                <button>rectangle</button> <br>
+                <button>ellipse</button> <br>
+                <button>delete</button> <br>
+              <!-- <img src="../static/assets/nature1.jpg" class="infographic" id="mid-figure1" alt=""> -->
+              </div>
              <!-- <img src="../static/assets/nature1.jpg" class="infographic" id="mid-figure2" alt=""> -->
            </div>
           </div>

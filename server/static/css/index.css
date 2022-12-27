@@ -1,16 +1,20 @@
-
 #magCanvas {
     background-image: url('../assets/nature1.jpg');
+    background-size: cover;
+
 }
 
 #phaseCanvas {
     background-image: url('../assets/nature1.jpg');
+    background-size: cover;
+}
+canvas {
+    max-height: 40.5vh;
 }
 /* general page styling */
 * {
     padding: 0;
     font-family: "Century Gothic", Arial, sans-serif;
-    text-align: left;
   } 
 p, h2, h3 {
     max-width: 100%;
@@ -19,6 +23,7 @@ p, h2, h3 {
 }
 button {
     text-align: center;
+    /* display: block; */
     padding: 0.9rem;
     margin: 0.5rem;
     min-width: 100px;
@@ -85,13 +90,17 @@ button:hover {
 .left-section {
     /* padding: 0.5rem; */
     border-radius: 2rem;
-    text-align: left;
+    text-align: center;
     max-width: 30vw;
     min-width: 25vw;
     /*height: 95vh;*/
 }
-.section-container > img, .section-container > canvas {
+.section-container > img {
     max-height: 36.5vh;
+}
+.section-container > div {
+    display: table-cell;
+    vertical-align: top;
 }
 .middle-section {
     /* padding: 0.5rem; */
@@ -99,16 +108,19 @@ button:hover {
     min-width: 33vw;
     margin-top: 2rem;
 }
+.button-array {
+    text-align: center;
+    display: flex;
+    align-items: center;
+}
 .right-section {
     /* padding: 0.5rem; */
     border-radius: 2rem;
     text-align: center;
     min-width: 33vw;
 }
-
 #img_recon {
     height: 50vh;
 }
 
-
-
+/* radion button styling */
