@@ -24,6 +24,9 @@
                 <!-- upper left img -->
                 <div class="section-container">
                     <form id="upload-image1-form" method="post" enctype="multipart/form-data">
+                        <label for="image_input1" class="import-btn">
+                            <i></i> Upload image
+                        </label>
                         <input id="image_input1" type="file" name="Image_File1" accept="image/jpeg, image/png, image/jpg"></input>
                         <div id="display_image1"></div>
                     </form>
@@ -31,7 +34,10 @@
                 <!-- lower left img -->
                 <div class="section-container">
                     <form id="upload-image2-form" method="post" enctype="multipart/form-data">
-                        <input id="image_input2" type="file" name="Image_File2" accept="image/jpeg, image/png, image/jpg"></input>
+                        <label for="image_input2" class="import-btn">
+                            <i class="fa fa-cloud-upload"></i> Upload image
+                        </label>
+                        <input id="image_input2" class="" type="file" name="Image_File2" accept="image/jpeg, image/png, image/jpg"></input>
                         <div id="display_image2"></div>
                     </form>
                 </div>
@@ -47,9 +53,9 @@
                         </canvas>
                     </div>
                     <div class="button-array">
-                        <button id="rect1">rectangle</button> <br>
-                        <button id="ellipse1">ellipse</button> <br>
-                        <button id="del1">delete</button> <br>
+                        <button id="rect1">rectangle</button>
+                        <button id="ellipse1">ellipse</button>
+                        <button id="del1">delete</button>
                         <!-- <img src="../static/assets/nature1.jpg" class="infographic" id="mid-figure1" alt=""> -->
                     </div>
                 </div>
@@ -96,7 +102,7 @@
             </div>
             </div>
 
-    <button onclick="update_element()">update</button>
+    <!-- <button onclick="update_element()">update</button> -->
 
     <!-- <script>
         const update_element = () => {
