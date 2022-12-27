@@ -1,18 +1,17 @@
-const image_input1 = document.querySelector("#image_input1")
-const image_input2 = document.querySelector("#image_input2")
-
 let Image1_Magnitude_path = "../static/assets/Image1_Magnitude.jpg"
 let Image2_Phase_path = "../static/assets/Image2_Phase.jpg"
 
 let Image1_Magnitude = document.getElementById("magCanvas")
 let Image2_Phase = document.getElementById("phaseCanvas")
 
+const image_input1 = document.querySelector("#image_input1")
+const image_input2 = document.querySelector("#image_input2")
 var uploaded_image1 = "";
 var uploaded_image2 = "";
 
 
-image_input1.addEventListener("change", function() {
-  const reader = new FileReader()
+image_input1.addEventListener("change", function(e) {
+    const reader = new FileReader()
 
     reader.addEventListener("load", () => {
         uploaded_image1 = reader.result;
@@ -61,9 +60,9 @@ let uploadImage = (formElement) => {
 
 
 //function that takes the element and a url, and updates it 
-const update_element = (imgElement, imgURL) => {
+let update_element = (imgElement, imgURL) => {
 	 // create a new timestamp 
 	 let timestamp = new Date().getTime();  
 	 let queryString = "?t=" + timestamp;    
-	 imgElement.src = imgURL + queryString;    
+     imgElement.style.backgroundImage = "url(" + imgURL + queryString + ")" ;
 }

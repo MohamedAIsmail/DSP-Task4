@@ -24,7 +24,6 @@
                 <!-- upper left img -->
                 <div class="section-container">
                     <form id="upload-image1-form" method="post" enctype="multipart/form-data">
-                        <label for="file"> Select first image </label>
                         <input id="image_input1" type="file" name="Image_File1" accept="image/jpeg, image/png, image/jpg"></input>
                         <div id="display_image1"></div>
                     </form>
@@ -32,7 +31,6 @@
                 <!-- lower left img -->
                 <div class="section-container">
                     <form id="upload-image2-form" method="post" enctype="multipart/form-data">
-                        <label for="file"> Select second image </label>
                         <input id="image_input2" type="file" name="Image_File2" accept="image/jpeg, image/png, image/jpg"></input>
                         <div id="display_image2"></div>
                     </form>
@@ -100,7 +98,7 @@
 
     <button onclick="update_element()">update</button>
 
-    <script>
+    <!-- <script>
         const update_element = () => {
             console.log("hello")
             // create a new timestamp 
@@ -110,7 +108,7 @@
             let queryString = "?t=" + timestamp;    
             canvas.style.backgroundImage = "url(" + imgURL + queryString + ")" ;    
         }
-    </script>
+    </script> -->
     <script src="../static/js/script.js"></script>
     <script src="../static/js/Ismail.js"></script>
 </body>
