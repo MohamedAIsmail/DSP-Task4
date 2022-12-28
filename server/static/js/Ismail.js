@@ -41,18 +41,21 @@ $(function() {
         is_uploaded1 = true
         uploadImage('#upload-image1-form')
         update_element(Image1_Magnitude, Image1_Magnitude_path)
-        if (is_uploaded1 && is_uploaded2) {
-            update_element(OutputImage, OutputImage_path)
-        }
+        rect1.disabled  = false
+        ellipse1.disabled  = false
+        del1.disabled  = false
+
+        
     });
     $('#image_input2').change(function() {
         uploadImage('#upload-image2-form')
         is_uploaded2 = true
         update_element(Image2_Phase, Image2_Phase_path)
-    
-        if (is_uploaded1 && is_uploaded2) {
-            update_element(OutputImage, OutputImage_path)
-        }
+        rect2.disabled  = false
+        ellipse2.disabled  = false
+        del2.disabled  = false
+        
+        
     
     });
 });
@@ -70,6 +73,7 @@ let uploadImage = (formElement) => {
                 console.log('Success!');
             },
         });
+    update_element(OutputImage, OutputImage_path)
 }
 
 

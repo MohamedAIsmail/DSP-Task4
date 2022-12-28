@@ -1,16 +1,12 @@
 from server import app
 from flask import request
 import os
-from server import utils as fn
+from server import utils as fn 
 import numpy as np
+import cv2
 
 
-outputAmp = 0
-outputPhase = 0
-originalPhase = 0
-originalAmp = 0
-magn_shapes = []
-phase_shapes = []
+img = fn.combine_img()
 
 
 @app.route('/uploadImage',  methods=['POST'])
@@ -26,36 +22,32 @@ def uploadImage():
             file2.save(os.path.join(
                 'server/static/assets/Image2.jpg'))
 
-        Image1, Image2 = fn.uploadImages()
+        Image1, Image2 = img.uploadImages()
 
-        Img1_amplitude, Img1_phase, Img2_amplitude, Img2_phase = fn.applyFFTShift(
+        Img1_amplitude, Img1_phase, Img2_amplitude, Img2_phase = img.applyFFTShift(
             Image1, Image2)
 
-        global outputAmp, outputPhase, originalAmp, originalPhase
-        outputAmp = Img1_amplitude
-        originalAmp = Img1_amplitude
+        img.originalAmp = Img1_amplitude
 
-        outputPhase = Img2_phase
-        originalPhase = Img2_phase
+        img.originalPhase = Img2_phase
 
-        fn.saveMagnitudeImages(
+        img.saveMagnitudeImages(
             Img1_amplitude, "server//static//assets//Image1_Magnitude.jpg")
-        fn.saveMagnitudeImages(
+        img.saveMagnitudeImages(
             Img2_amplitude, "server//static//assets//Image2_Magnitude.jpg")
-        fn.savePhaseImages(
+        img.savePhaseImages(
             Img1_phase, "server//static//assets//Image1_Phase.jpg")
-        fn.savePhaseImages(
+        img.savePhaseImages(
             Img2_phase, "server//static//assets//Image2_Phase.jpg")
 
-        Output = fn.finalImageFormation(Img1_amplitude, Img2_phase)
-        fn.saveOutputImage(Output)
+        Output = img.finalImageFormation(img.outputAmp, img.outputPhase)
+        img.saveOutputImage(Output)
 
     return []
 
 
 @app.route('/updateOutput',  methods=['POST'])
 def updateOutput():
-    global outputAmp, outputPhase, originalAmp, originalPhase, magn_shapes, phase_shapes
 
     Output_Magnitudes = []
     Output_Phases = []
@@ -67,36 +59,46 @@ def updateOutput():
     if (len(shapes1) != 0):
         for shape in shapes1:
             if (shape["type"] == 'rect'):
-                Output_Magnitudes.append(fn.fourier_masker(
-                    shape["x"], shape["y"], shape["width"], shape["height"], originalAmp))
+                Output_Magnitudes.append(img.fourier_masker(
+                    shape["x"], shape["y"], shape["width"], shape["height"], img.originalAmp))
 
             if (shape["type"] == 'ellipse'):
-                Output_Magnitudes.append(fn.fourier_ellpise_masker(
-                    shape["x"], shape["y"], shape["Rx"], shape["Ry"], originalAmp))
-            outputAmp = Output_Magnitudes[0]
+                Output_Magnitudes.append(img.fourier_ellpise_masker(
+                    shape["x"], shape["y"], shape["Rx"], shape["Ry"], img.originalAmp))
+        img.outputAmp = Output_Magnitudes[0]
+        if  len(shapes1) > 1:
+            index1 = -1
             for shapeOutput in Output_Magnitudes:
-                outputAmp = np.logical_or(outputAmp, shapeOutput) * originalAmp
+                index1 +=1
+                if index1 == 0: 
+                    continue
+                img.outputAmp = cv2.bitwise_xor(img.outputAmp, shapeOutput) 
     else:
-        outputAmp = originalAmp
+        img.outputAmp = np.ones((300,300))
 
     if (len(shapes2) != 0):
         for shape in shapes2:
             if (shape["type"] == 'rect'):
-                Output_Phases.append(fn.fourier_masker(
-                    shape['x'], shape['y'], shape["width"], shape["height"], originalPhase))
+                Output_Phases.append(img.fourier_masker(
+                    shape['x'], shape['y'], shape["width"], shape["height"], img.originalPhase))
 
             if (shape["type"] == 'ellipse'):
-                Output_Phases.append(fn.fourier_ellpise_masker(
-                    shape['x'], shape['y'], shape["Rx"], shape["Ry"], originalPhase))
-        outputPhase = Output_Phases[0]
-        for shapeOutput in Output_Phases:
-            outputPhase = np.logical_or(
-                outputPhase, shapeOutput) * originalPhase
+                Output_Phases.append(img.fourier_ellpise_masker(
+                    shape['x'], shape['y'], shape["Rx"], shape["Ry"], img.originalPhase))
+        img.outputPhase = Output_Phases[0]
+        if len(shapes2) > 1:
+            index2 = -1
+            for shapeOutput in Output_Phases:
+                index2 +=1
+                if index2 == 0: 
+                    continue
+                img.outputPhase = cv2.bitwise_xor(
+                    img.outputPhase, shapeOutput)
     else:
-        outputPhase = originalPhase
+        img.outputPhase = np.ones((300,300))
 
-    Output = fn.finalImageFormation(outputAmp, outputPhase)
-    fn.saveOutputImage(Output)
+    Output = img.finalImageFormation(img.outputAmp, img.outputPhase)
+    img.saveOutputImage(Output)
     print("DONE")
 
     return []
