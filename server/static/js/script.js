@@ -343,13 +343,14 @@ let send_shapes = ()=> {
         data: JSON.stringify({shapes1, shapes2}),
         cache: false,
         dataType: 'json',
+        async: false,
         contentType: 'application/json',
         processData: false,
         success: function(data) {
 
         },
     });
-    setTimeout(update_element(OutputImage, OutputImage_path), 800)
+    update_element(OutputImage, OutputImage_path)
 }
 
 

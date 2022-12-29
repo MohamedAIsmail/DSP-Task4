@@ -36,7 +36,7 @@ image_input2.addEventListener("change", function() {
 })
 let is_uploaded1 = false
 let is_uploaded2 = false
-$(function() {
+
     $('#image_input1').change(function () {
         uploadImage('#upload-image1-form')
         is_uploaded1 = true
@@ -58,7 +58,7 @@ $(function() {
         send_shapes()        
     
     });
-});
+
 
 let uploadImage = (formElement) => {
     let form_data = new FormData($(formElement)[0]);

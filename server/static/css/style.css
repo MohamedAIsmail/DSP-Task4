@@ -18,17 +18,17 @@
 }
 
 #magCanvas {
-    background-image: url('../assets/Image1_Magnitude.jpg');
+    /* background-image: url('../assets/Image1_Magnitude.jpg'); */
     background-size: cover;
-
 }
 
 #phaseCanvas {
-    background-image: url('../assets/Image1_Phase.jpg');
+    /* background-image: url('../assets/Image1_Phase.jpg'); */
     background-size: cover;
 }
 
 #outputCanvas {
+    background-size: cover;
     height: 45vh;
 }
 
