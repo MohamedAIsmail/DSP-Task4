@@ -38,12 +38,13 @@ let is_uploaded1 = false
 let is_uploaded2 = false
 $(function() {
     $('#image_input1').change(function () {
-        is_uploaded1 = true
         uploadImage('#upload-image1-form')
+        is_uploaded1 = true
         update_element(Image1_Magnitude, Image1_Magnitude_path)
         rect1.disabled  = false
         ellipse1.disabled  = false
         del1.disabled  = false
+        send_shapes()
 
         
     });
@@ -54,8 +55,7 @@ $(function() {
         rect2.disabled  = false
         ellipse2.disabled  = false
         del2.disabled  = false
-        
-        
+        send_shapes()        
     
     });
 });
@@ -69,11 +69,12 @@ let uploadImage = (formElement) => {
             cache: false,
             contentType: false,
             processData: false,
+            async: false,
             success: function(data) {
                 console.log('Success!');
             },
         });
-    update_element(OutputImage, OutputImage_path)
+    
 }
 
 
@@ -81,7 +82,6 @@ let uploadImage = (formElement) => {
 let update_element = (imgElement, imgURL) => {
     // create a new timestamp 
     setTimeout(() => {
-
         let timestamp = new Date().getTime();
         let queryString = "?t=" + timestamp;
         imgElement.style.backgroundImage = "url(" + imgURL + queryString + ")";

@@ -28,7 +28,7 @@ def uploadImage():
             Image1, Image2)
 
         img.originalAmp = Img1_amplitude
-
+        
         img.originalPhase = Img2_phase
 
         img.saveMagnitudeImages(
@@ -40,9 +40,6 @@ def uploadImage():
         img.savePhaseImages(
             Img2_phase, "server//static//assets//Image2_Phase.jpg")
 
-        Output = img.finalImageFormation(img.outputAmp, img.outputPhase)
-        img.saveOutputImage(Output)
-
     return []
 
 
@@ -52,7 +49,7 @@ def updateOutput():
     Output_Magnitudes = []
     Output_Phases = []
     jsonData = request.get_json()
-
+    print("HELLOOOOOOOOOOOOOOOOOOOOOO")
     shapes1 = jsonData['shapes1']
     shapes2 = jsonData['shapes2']
 

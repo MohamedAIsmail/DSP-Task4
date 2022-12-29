@@ -130,7 +130,6 @@ let mouse_down = (event, offset_x, offset_y, shapes, canvas, context)=>{
     event.preventDefault();
     startX = parseInt(event.clientX - offset_x);
     startY = parseInt(event.clientY - offset_y);
-    console.log(offset_x)
 
     let index = 0
     for(let shape of shapes){
@@ -161,7 +160,7 @@ let mouse_up = (event, shapes, context, canvas, imgType)=> {
         draw_shapes(context, canvas, shapes)
         select_shape(shapes[current_shape_index], context)
         is_dragging = false;
-        send_shapes(shapes, imgType)
+        send_shapes()
 
         return
     }
@@ -170,7 +169,7 @@ let mouse_up = (event, shapes, context, canvas, imgType)=> {
         draw_shapes(context, canvas, shapes)
         select_shape(shapes[current_shape_index], context)
         scaling_point_drag = false
-        send_shapes(shapes, imgType)
+        send_shapes()
     }
     else{
         return
@@ -185,7 +184,7 @@ let mouse_out = (event, shapes, imgType)=> {
     event.preventDefault();
     is_dragging = false;
     scaling_point_drag = false
-    send_shapes(shapes, imgType)
+    send_shapes()
 
 
 }
@@ -296,26 +295,26 @@ canvas2.addEventListener('mousemove', (e)=>{
 rect1.onclick = ()=>{
     shapes1.push({type:'rect', x:100, y:100, width:100, height:100, color:'green'})
     draw_shapes(context1, canvas1, shapes1)
-    send_shapes(shapes1, img1_type)
+    send_shapes()
 
 }
 rect2.onclick = ()=>{
     shapes2.push({type:'rect', x:100, y:100 , width:100, height:100, color:'green'})
     console.log(shapes2)
     draw_shapes(context2, canvas2, shapes2)
-    send_shapes(shapes2, img2_type)
+    send_shapes()
 }
 
 ellipse1.onclick = ()=> {
     shapes1.push({type:'ellipse', x:150, y:150 , Rx:25, Ry:50, color:'green'})
     draw_shapes(context1, canvas1, shapes1)
-    send_shapes(shapes1, img1_type)
+    send_shapes()
 }
 
 ellipse2.onclick = ()=> {
     shapes2.push({type:'ellipse', x:150, y:150 , Rx:25, Ry:50, color:'green'})
     draw_shapes(context2, canvas2, shapes2)
-    send_shapes(shapes2, img2_type)
+    send_shapes()
 }
 
 del1.onclick = ()=>{
@@ -324,7 +323,7 @@ del1.onclick = ()=>{
     }
     shapes1.splice(current_shape_index, 1)
     draw_shapes(context1, canvas1, shapes1)
-    send_shapes(shapes1, img1_type)
+    send_shapes()
 }
 
 del2.onclick = ()=>{
@@ -333,7 +332,7 @@ del2.onclick = ()=>{
     }
     shapes2.splice(current_shape_index, 1)
     draw_shapes(context2, canvas2, shapes2)
-    send_shapes(shapes2, img2_type)
+    send_shapes()
 }
 
 let send_shapes = ()=> {
@@ -350,7 +349,7 @@ let send_shapes = ()=> {
 
         },
     });
-    update_element(OutputImage, OutputImage_path)
+    setTimeout(update_element(OutputImage, OutputImage_path), 800)
 }
 
 
