@@ -52,16 +52,16 @@ const select_shape = (shape, context) => {
     context.globalAlpha = 0.8
 
         if(shape.type == 'rect'){
-            bullet_points = [{type:'ellipse', side:'left', x:shape.x - 2, y:shape.y + 0.5* shape.height, Rx:5, Ry:5},
-                            {type:'ellipse', side:'right', x:shape.x + shape.width + 2, y:shape.y + 0.5*shape.height, Rx:5, Ry:5},
-                            {type:'ellipse', side:'top', x:shape.x + 0.5*shape.width, y:shape.y - 2, Rx:5, Ry:5},
-                            {type:'ellipse', side:'bottom', x:shape.x + 0.5*shape.width, y:shape.y + shape.height + 2, Rx:5, Ry:5}]
+            bullet_points = [{type:'ellipse', side:'left', x:shape.x - 4, y:shape.y + 0.5* shape.height, Rx:5, Ry:5},
+                            {type:'ellipse', side:'right', x:shape.x + shape.width + 4, y:shape.y + 0.5*shape.height, Rx:5, Ry:5},
+                            {type:'ellipse', side:'top', x:shape.x + 0.5*shape.width, y:shape.y - 4, Rx:5, Ry:5},
+                            {type:'ellipse', side:'bottom', x:shape.x + 0.5*shape.width, y:shape.y + shape.height + 4, Rx:5, Ry:5}]
         }
         else{
-            bullet_points = [{type:'ellipse', side:'left', x:shape.x - shape.Rx - 2, y:shape.y, Rx:5, Ry:5},
-                            {type:'ellipse', side:'right', x:shape.x + 2 + shape.Rx, y:shape.y, Rx:5, Ry:5},
-                            {type:'ellipse', side:'top', x:shape.x, y:shape.y - shape.Ry - 2, Rx:5, Ry:5},
-                            {type:'ellipse', side:'bottom', x:shape.x, y:shape.y + shape.Ry + 2, Rx:5, Ry:5}]
+            bullet_points = [{type:'ellipse', side:'left', x:shape.x - shape.Rx - 4, y:shape.y, Rx:5, Ry:5},
+                            {type:'ellipse', side:'right', x:shape.x + 4 + shape.Rx, y:shape.y, Rx:5, Ry:5},
+                            {type:'ellipse', side:'top', x:shape.x, y:shape.y - shape.Ry - 4, Rx:5, Ry:5},
+                            {type:'ellipse', side:'bottom', x:shape.x, y:shape.y + shape.Ry + 4, Rx:5, Ry:5}]
         }
         for(let bullet_point of bullet_points){
         context.beginPath();
