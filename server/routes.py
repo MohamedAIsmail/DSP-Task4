@@ -6,9 +6,10 @@ import numpy as np
 import cv2
 
 
-img1 = fn.img_processing()
-img2 = fn.img_processing()
-output_img = fn.combine_img()
+img1 = fn.Image()
+img2 = fn.Image()
+output_img = fn.Image()
+
 
 
 @app.route('/uploadImage',  methods=['POST'])
@@ -24,8 +25,8 @@ def uploadImage():
             file2.save(os.path.join(
                 'server/static/assets/Image2.jpg'))
 
-        img1.uploadImages(1)
-        img2.uploadImages(2)
+        img1.uploadImages('server/static/assets/Image1.jpg')
+        img2.uploadImages('server/static/assets/Image2.jpg')
 
         img1.applyFFTShift()
         img2.applyFFTShift()
@@ -39,7 +40,7 @@ def uploadImage():
 
 @app.route('/updateOutput',  methods=['POST'])
 def updateOutput():
-
+    global output_img
     Output_Magnitudes = []
     Output_Phases = []
     jsonData = request.get_json()
@@ -55,16 +56,16 @@ def updateOutput():
             if (shape["type"] == 'ellipse'):
                 Output_Magnitudes.append(img1.fourier_ellpise_masker(
                     shape["x"], shape["y"], shape["Rx"], shape["Ry"], 'amp'))
-        output_img.outputAmp = Output_Magnitudes[0]
+        output_img.magntiude = Output_Magnitudes[0]
         if  len(shapes1) > 1:
             index1 = -1
             for shapeOutput in Output_Magnitudes:
                 index1 +=1
                 if index1 == 0: 
                     continue
-                output_img.outputAmp = cv2.bitwise_xor(output_img.outputAmp, shapeOutput) 
+                output_img.magntiude = cv2.bitwise_xor(output_img.magntiude, shapeOutput) 
     else:
-        output_img.outputAmp = np.ones((300,300))
+        output_img.magntiude = np.ones((300,300))
 
     if (len(shapes2) != 0):
         for shape in shapes2:
@@ -75,21 +76,21 @@ def updateOutput():
             if (shape["type"] == 'ellipse'):
                 Output_Phases.append(img2.fourier_ellpise_masker(
                     shape['x'], shape['y'], shape["Rx"], shape["Ry"], 'phase'))
-        output_img.outputPhase = Output_Phases[0]
+        output_img.phase = Output_Phases[0]
         if len(shapes2) > 1:
             index2 = -1
             for shapeOutput in Output_Phases:
                 index2 +=1
                 if index2 == 0: 
                     continue
-                output_img.outputPhase = cv2.bitwise_xor(
-                    output_img.outputPhase, shapeOutput)
+                output_img.phase = cv2.bitwise_xor(
+                    output_img.phase, shapeOutput)
     else:
-        output_img.outputPhase = np.ones((300,300))
+        output_img.phase = np.ones((300,300))
 
-    output_img.finalImageFormation()
-    output_img.controller(output_img.FinalImage)
-    output_img.saveOutputImage()
+    output_img = fn.combine_img.finalImageFormation(output_img, output_img)
+    fn.combine_img.controller(output_img)
+    fn.combine_img.saveOutputImage("server//static//assets//Output.jpg", output_img)
     print("DONE")
 
     return []

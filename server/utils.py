@@ -3,40 +3,46 @@ import numpy as np
 from matplotlib import pyplot as plt
 from PIL import Image as im
 
-class img_processing:
+class Image:
     def __init__(self): 
-        self.originalAmp = np.ones((300,300))
-        self.outputAmp = np.ones((300,300))
-        self.originalPhase = np.ones((300,300))
-        self.outputPhase = np.ones((300,300))
+        self.magntiude = np.ones((300,300))
+        self.phase = np.ones((300,300))
+        self.image = False
 
-    def uploadImages(self, num):
-        image = cv2.imread(f'server/static/assets/Image{num}.jpg')
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        image = cv2.resize(image, (300, 300))
-        self.image = image
+    def uploadImages(self, path, size=(300,300), grayScale = True):
+        self.image = cv2.imread(path)
+        self.resize(size)
+        if grayScale:
+            self.grayScale()
+
+
+    def resize(self, size):
+        self.image = image = cv2.resize(self.image, size)
         
-         
+    def grayScale(self):
+        self.image = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
+
+        
 
 
     def applyFFTShift(self):
 
         Image_fft = np.fft.fftshift(np.fft.fft2(self.image))
-        self.originalAmp = np.abs(Image_fft)
-        self.originalPhase = np.angle(Image_fft)
+        self.magntiude = np.abs(Image_fft)
+        self.phase = np.angle(Image_fft)
         
 
 
 
     def saveMagnitudeImages(self, filename):
 
-        Img_amplitude_data = self.scale(20 * np.log(self.originalAmp))
+        Img_amplitude_data = self.scale(20 * np.log(self.magntiude))
         cv2.imwrite(filename, Img_amplitude_data)
 
 
     def savePhaseImages(self, filename):
 
-        Img_phase_data = self.scale(self.originalPhase)
+        Img_phase_data = self.scale(self.phase)
         cv2.imwrite(filename, Img_phase_data)
 
 
@@ -52,10 +58,10 @@ class img_processing:
         Output = np.zeros((300, 300))
         if img_type == 'amp':
             Output[y: y+height, x:x +
-                width] = self.originalAmp[y:y+height, x:x+width]
+                width] = self.magntiude[y:y+height, x:x+width]
         else:
             Output[y: y+height, x:x +
-                width] = self.originalPhase[y:y+height, x:x+width]
+                width] = self.phase[y:y+height, x:x+width]
 
         return Output
 
@@ -80,9 +86,9 @@ class img_processing:
 
         Output = np.zeros((300, 300))
         if img_type == 'amp':
-            Output[y1:y2, x1:x2] = self.originalAmp[y1:y2, x1:x2]
+            Output[y1:y2, x1:x2] = self.magntiude[y1:y2, x1:x2]
         else:
-            Output[y1:y2, x1:x2] = self.originalPhase[y1:y2, x1:x2]    
+            Output[y1:y2, x1:x2] = self.phase[y1:y2, x1:x2]    
         Output[y1:y2, x1:x2] = Output[y1:y2, x1:x2] * ellipse
         return Output
 
@@ -90,24 +96,28 @@ class img_processing:
 
 class combine_img:
     def __init__(self):
-        self.outputAmp = np.ones((300,300))
-        self.outputPhase = np.ones((300,300))
+        return
 
-
-    def saveOutputImage(self):
+    def saveOutputImage(path, imageObject):
         # self.FinalImage = self.scale(self.FinalImage)    
         # FinalImage = cv2.equalizeHist(FinalImage)
-        cv2.imwrite("server//static//assets//Output.jpg", self.FinalImage)
+        cv2.imwrite(path, imageObject.image)
 
 
-    def finalImageFormation(self):
-        OutputImage = np.multiply(self.outputAmp, np.exp(1j * self.outputPhase))
-        self.FinalImage = np.real(np.fft.ifft2(OutputImage))
-        self.FinalImage = np.abs(self.FinalImage)
+    def finalImageFormation (imgObject1, imgObject2):
+        combined_img = Image()
+        combined_img.magntiude = imgObject1.magntiude
+        combined_img.phase = imgObject2.phase
+        OutputImage = np.multiply(imgObject1.magntiude, np.exp(1j * imgObject2.phase))
+        FinalImage = np.real(np.fft.ifft2(OutputImage))
+        FinalImage = np.abs(FinalImage)
+        combined_img.image = FinalImage
+        
+        return combined_img
         
     
     
-    def controller(self, img, brightness=400, contrast=150):
+    def controller(imageObject, brightness=400, contrast=150):
         brightness = int((brightness - 0) * (255 - (-255)) / (510 - 0) + (-255))
     
         contrast = int((contrast - 0) * (127 - (-127)) / (254 - 0) + (-127))
@@ -131,11 +141,11 @@ class combine_img:
             # The function addWeighted
             # calculates the weighted sum
             # of two arrays
-            cal = cv2.addWeighted(img, al_pha,
-                                img, 0, ga_mma)
+            cal = cv2.addWeighted(imageObject.image, al_pha,
+                                imageObject.image, 0, ga_mma)
     
         else:
-            cal = img
+            cal = imageObject.image
     
         if contrast != 0:
             Alpha = float(131 * (contrast + 127)) / (127 * (131 - contrast))
@@ -146,12 +156,11 @@ class combine_img:
             cal = cv2.addWeighted(cal, Alpha,
                                 cal, 0, Gamma)
     
-        
-        self.FinalImage = cal
+        imageObject.image = cal
     
     
-    def scale(self, image_array):
+    # def scale(self, image_array):
 
-        image = ((image_array - image_array.min()) *
-                (1/(image_array.max() - image_array.min()) * 255)).astype('uint8')
-        return image
+    #     image = ((image_array - image_array.min()) *
+    #             (1/(image_array.max() - image_array.min()) * 255)).astype('uint8')
+    #     return image
