@@ -1,15 +1,14 @@
 from server import app
 from flask import request
 import os
-from server import utils as fn 
+from server import utils as fn
 import numpy as np
 import cv2
 
 
 img1 = fn.Image()
 img2 = fn.Image()
-output_img = fn.Image()
-
+outputImageObject = fn.Image()
 
 
 @app.route('/uploadImage',  methods=['POST'])
@@ -30,9 +29,9 @@ def uploadImage():
 
         img1.applyFFTShift()
         img2.applyFFTShift()
-        
 
-        img1.saveMagnitudeImages("server//static//assets//Image1_Magnitude.jpg")
+        img1.saveMagnitudeImages(
+            "server//static//assets//Image1_Magnitude.jpg")
         img2.savePhaseImages("server//static//assets//Image2_Phase.jpg")
 
     return []
@@ -40,7 +39,7 @@ def uploadImage():
 
 @app.route('/updateOutput',  methods=['POST'])
 def updateOutput():
-    global output_img
+    global outputImageObject
     Output_Magnitudes = []
     Output_Phases = []
     jsonData = request.get_json()
@@ -50,47 +49,50 @@ def updateOutput():
     if (len(shapes1) != 0):
         for shape in shapes1:
             if (shape["type"] == 'rect'):
-                Output_Magnitudes.append(img1.fourier_rect_masker(
+                Output_Magnitudes.append(img1.fourierRectMasker(
                     shape["x"], shape["y"], shape["width"], shape["height"], 'amp'))
 
             if (shape["type"] == 'ellipse'):
-                Output_Magnitudes.append(img1.fourier_ellpise_masker(
+                Output_Magnitudes.append(img1.fourierEllpiseMasker(
                     shape["x"], shape["y"], shape["Rx"], shape["Ry"], 'amp'))
-        output_img.magntiude = Output_Magnitudes[0]
-        if  len(shapes1) > 1:
+        outputImageObject.magntiude = Output_Magnitudes[0]
+        if len(shapes1) > 1:
             index1 = -1
             for shapeOutput in Output_Magnitudes:
-                index1 +=1
-                if index1 == 0: 
+                index1 += 1
+                if index1 == 0:
                     continue
-                output_img.magntiude = cv2.bitwise_xor(output_img.magntiude, shapeOutput) 
+                outputImageObject.magntiude = cv2.bitwise_xor(
+                    outputImageObject.magntiude, shapeOutput)
     else:
-        output_img.magntiude = np.ones((300,300))
+        outputImageObject.magntiude = np.ones((300, 300))
 
     if (len(shapes2) != 0):
         for shape in shapes2:
             if (shape["type"] == 'rect'):
-                Output_Phases.append(img2.fourier_rect_masker(
+                Output_Phases.append(img2.fourierRectMasker(
                     shape['x'], shape['y'], shape["width"], shape["height"], 'phase'))
 
             if (shape["type"] == 'ellipse'):
-                Output_Phases.append(img2.fourier_ellpise_masker(
+                Output_Phases.append(img2.fourierEllpiseMasker(
                     shape['x'], shape['y'], shape["Rx"], shape["Ry"], 'phase'))
-        output_img.phase = Output_Phases[0]
+        outputImageObject.phase = Output_Phases[0]
         if len(shapes2) > 1:
             index2 = -1
             for shapeOutput in Output_Phases:
-                index2 +=1
-                if index2 == 0: 
+                index2 += 1
+                if index2 == 0:
                     continue
-                output_img.phase = cv2.bitwise_xor(
-                    output_img.phase, shapeOutput)
+                outputImageObject.phase = cv2.bitwise_xor(
+                    outputImageObject.phase, shapeOutput)
     else:
-        output_img.phase = np.ones((300,300))
+        outputImageObject.phase = np.ones((300, 300))
 
-    output_img = fn.combine_img.finalImageFormation(output_img, output_img)
-    fn.combine_img.controller(output_img)
-    fn.combine_img.saveOutputImage("server//static//assets//Output.jpg", output_img)
+    outputImageObject = fn.combine_img.finalImageFormation(
+        outputImageObject, outputImageObject)
+    fn.combine_img.controller(outputImageObject)
+    fn.combine_img.saveOutputImage(
+        "server//static//assets//Output.jpg", outputImageObject)
     print("DONE")
 
     return []
