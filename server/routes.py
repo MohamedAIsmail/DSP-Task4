@@ -65,7 +65,9 @@ def updateOutput():
                 outputImageObject.magntiude = cv2.bitwise_xor(
                     outputImageObject.magntiude, shapeOutput)
     else:
-        outputImageObject.magntiude = np.ones((300, 300))
+        # outputImageObject.magntiude = np.ones((300, 300))
+        outputImageObject.magntiude = np.zeros((300, 300))
+        outputImageObject.magntiude[140:160, 140:160] = 1
 
     if (len(shapes2) != 0):
         for shape in shapes2:
@@ -90,7 +92,8 @@ def updateOutput():
 
     outputImageObject = fn.combine_img.finalImageFormation(
         outputImageObject, outputImageObject)
-    fn.combine_img.controller(outputImageObject)
+    # fn.combine_img.controller(outputImageObject)
+
     fn.combine_img.saveOutputImage(
         "server//static//assets//Output.jpg", outputImageObject)
     print("DONE")

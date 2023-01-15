@@ -41,7 +41,7 @@ class Image:
     def scale(self, image_array):
 
         image = ((image_array - image_array.min()) *
-                 (1/(image_array.max() - image_array.min()) * 255)).astype('uint8')
+                 (1/(image_array.max() - image_array.min()) * 255)).astype('float')
         return image
 
     def fourierRectMasker(self, x, y, width, height, img_type):
@@ -90,7 +90,7 @@ class combine_img:
     def saveOutputImage(path, imageObject):
         # FinalImage = cv2.equalizeHist(imageObject.image)
         FinalImage = imageObject.scale(imageObject.image)
-        cv2.imwrite(path, FinalImage)
+        plt.imsave(path, imageObject.image, cmap='gray')
 
     def finalImageFormation(imgObject1, imgObject2):
         combined_img = Image()
