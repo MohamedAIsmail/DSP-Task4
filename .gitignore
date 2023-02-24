@@ -1,5 +1,4 @@
 __pycache__/
-*.jpg
 server/static/assets/Image2.jpg
 server/static/assets/Image2_Magnitude.jpg
 server/static/assets/Image2_Phase.jpg
